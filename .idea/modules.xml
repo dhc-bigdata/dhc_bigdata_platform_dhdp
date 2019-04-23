@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/dhc_bigdata_platform_dhdp.iml" filepath="$PROJECT_DIR$/dhc_bigdata_platform_dhdp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/dhdp_bigdata_platform/dhdp_bigdata_platform.iml" filepath="$PROJECT_DIR$/dhdp_bigdata_platform/dhdp_bigdata_platform.iml" />
+    </modules>
+  </component>
+</project>
