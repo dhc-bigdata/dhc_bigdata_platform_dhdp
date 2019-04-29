@@ -15,8 +15,6 @@ dhdp_package=/home/hadoop/dhdp/package #安装包存放目录
 dhdp_log=/home/hadoop/dhdp/logs #集群存放日志
 dhdp_share=/home/hadoop/dhdp/share #集群文档存放目录
 
-#定义日志文件存放的位置
-log_file=$dhdp_log/install.log
 #如果文件夹不存在，则创建
 [ ! -d dhdp_log ] && mkdir -pdhdp_log] && mkdir -pdhdp_log
 #检查执行状态，将状态写入日志文件
