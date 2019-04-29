@@ -29,8 +29,8 @@ function config_user_group(){
 	usermod hadoop -G root
 
 	cp $dhdp_home/conf/bashrc /home/hadoop/.bashrc
-
 	chown -R $user:$user /home/$user
+	chmod -R 700 /home/$user
 
 }
 
