@@ -27,31 +27,25 @@ mysql_conf=/home/hadoop/conf/mysql
 function install_each_host_mysql(){
         echo "[+] The function install_each_host_mysql begin......"
         param=`echo $mysql_version | grep "^[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}$"`
-        if [ -z "$mysql_version" ] || [ -z $param ];
-                then
-                        echo " [-] This parameter mysql_version cannot be null and cannot be a character, For example: 5.7.25  ......"
-                        return
+        if [ -z "$mysql_version" ] || [ -z $param ];then
+            echo " [-] This parameter mysql_version cannot be null and cannot be a character, For example: 5.7.22  ......"
+            return
         fi
 
-        if [ "x$USER" != "xroot" ];
-                 then
-                        echo "[-] You must use the root user to install this tool ......"
-                        return 
+        if [ "x$USER" != "xroot" ];then
+            echo "[-] You must use the root user to install this tool ......"
+            return
         fi
 
         #1.删除之前安装可能存在的垃圾目录和文件
         rm -rf $mysql_data_dir && rm -rf $mysql_install_dir/mysql-$mysql_version
         rm -rf /etc/init.d/mysqld && rm -rf $mysql_log_dir
-
-               
-        source /home/hadoop/.bashrc   #MYSQL_HOME环境变量配置在/home/hpdp/.bashrc ,root用户需要source刷新
         version_own=`mysql --version >/dev/null 2>&1`  #如果没有安装mysql，标准日志输出为空
         #2.判断如果mysql安装了，不管任何版本的则不再安装
-        if [ $? == 0 ];
-                then
-                        version_mysql=`mysql --version`
-                        echo "[-] MySQL is already install,THE VERSION : $version_mysql"
-                        return 
+        if [ $? == 0 ];then
+            version_mysql=`mysql --version`
+            echo "[-] MySQL is already install,THE VERSION : $version_mysql"
+            return
         fi
 
         #3.在hadoop用户家目录下创建数据库数据文件目录$mysql_data_dir和mysql错误日志log-error目录
@@ -79,8 +73,8 @@ function install_each_host_mysql(){
         chown -R hadoop:hadoop $mysql_log_dir
         chown -R hadoop:hadoop  /home/hadoop/bin
         #8.更改mysql安装文件夹$mysql_install_dir/mysql的权限
-        chmod -R 755 $mysql_install_dir/mysql-$mysql_version
-        chmod -R 777 /home/hadoop/bin
+        chmod -R 750 $mysql_install_dir/mysql-$mysql_version
+
         #9.如果没安装，可以用下面命令安装
         yum install -y libaio
 
@@ -99,10 +93,10 @@ function install_each_host_mysql(){
         echo -e 'export PATH=$PATH:$MYSQL_HOME/bin' >> /home/hadoop/.bashrc
         source /home/hadoop/.bashrc  #刷新hadoop用户环境变量配置文件
 
-   #14.对mysql进行初始化
-	su - hadoop <<-EOF
-		bash /home/hadoop/bin/hlk_each_host_install_mysql.sh init $mysql_version
-	EOF
+        #14.对mysql进行初始化
+    	#su - hadoop << -EOF
+    	#	bash /home/hadoop/bin/hlk_each_host_install_mysql.sh init $mysql_version
+    	#EOF
 
 	 #15.删除/etc/my.cnf文件中的免密权限校验属性skip-grant-tables并重启服务
         sed -i "s!skip-grant-tables!#skip-grant-tables!g" /etc/my.cnf

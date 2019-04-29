@@ -11,4 +11,4 @@ fi
 cd $dhdp_bin_dir && dhdp_config_each_firewalld.sh
 
 #配置用户
-cd $dhdp_bin_dir && dhdp_echo_host_config_user.sh
+cd $dhdp_bin_dir && dhdp_each_host_config_user.sh

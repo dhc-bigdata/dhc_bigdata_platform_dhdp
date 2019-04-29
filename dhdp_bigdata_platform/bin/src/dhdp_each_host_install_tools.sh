@@ -7,5 +7,10 @@ hostname=`hostname`
 
 #只在最后一台机器安装
 if [ $hostname == "hadoop03" ];then
-    cd $dhdp_bin_dir && bash dhdp_install_mysql.sh
+    cd $dhdp_bin_dir && bash dhdp_install_mysql.sh install 5.7.22
 fi
+    cd $dhdp_bin_dir && bash dhdp_each_host_install_jdk.sh
+
+
+
+
