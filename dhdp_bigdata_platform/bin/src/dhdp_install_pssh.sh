@@ -15,6 +15,7 @@
 ##############################################################################
 ##下载上传pssh到/usr/local/pssh目录
 mkdir /usr/local/pssh
+dhdp_home=/home/hadoop/dhdp/core
 $2=/usr/local/pssh/pssh-1.4.1
 ## 将安装包解压到安装位置，不输出日志
 tar -xzvf /usr/local/pssh/pssh-1.4.1.tar.gz
