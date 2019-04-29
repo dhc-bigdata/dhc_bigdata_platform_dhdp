@@ -30,10 +30,9 @@ function config_user_group(){
 
 	cp $dhdp_home/conf/bashrc /home/hadoop/.bashrc
 	chown -R $user:$user /home/$user
-	chmod -R 700 /home/$user
+	chmod -R 750 /home/$user
 
 }
 
 config_user
-
 config_user_group
