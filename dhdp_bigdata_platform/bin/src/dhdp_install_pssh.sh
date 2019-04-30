@@ -28,26 +28,6 @@ python setup.py install
 cd /home/hadoop/core/pssh-1.4.1
 python setup.py build
 python setup.py install
-##在 /root/.ssh/目录下创建rsa.sh test.txt文件
-mkdir  /root/.ssh/
 
-cd /root/.ssh/
-touch rsa.sh
-touch test.txt
-touch id_rsa.pub
-touch id_rsa
-##服务器ip写入test.txt文件中
-echo '192.168.222.301' >>/root/.ssh/test.txt
-echo '192.168.222.302' >>/root/.ssh/test.txt
-echo '192.168.222.303' >>/root/.ssh/test.txt
- more rsa.sh
-#!/bin/sh
-#by authors chy 2016
-for i in $(cat test.txt)
-do
-        ssh-copy-id -i /root/.ssh/id_rsa.pub $i
-        expect "password:"
-        send "hadoop123"
-        echo $i"设置密码登录成功"
-done
-
+##查看版本号
+pssh --version
