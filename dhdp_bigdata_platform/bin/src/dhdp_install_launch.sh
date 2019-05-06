@@ -1,5 +1,5 @@
 #!/bin/bash
- dhdp_dir=/home/hadoop/dhdp/bin/
+dhdp_dir=/home/hadoop/dhdp/bin/
 
 cd $dhdp_dir && bash dhdp_each_host_init.sh
 
