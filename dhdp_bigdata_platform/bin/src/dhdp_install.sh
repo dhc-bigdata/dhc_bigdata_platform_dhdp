@@ -26,11 +26,13 @@ fi
 version=$1
 
 echo "uncompress dhdp_install_launch.sh ..."
-cd /root/dhdp && tar -zxvf dhdp-$version.tar.gz
+cd /root/dhdp && tar -zxf dhdp-$version.tar.gz
 
 echo "bash dhdp_install_launch.sh. show log in /root/logs/install_log_all.log ..."
 mkdir -p /root/logs
-bash dhdp_install_launch.sh $1 $2 > /root/logs/install_log_all.log 2>&1
+bash /root/dhdp/dhdp-$version/bin/src/dhdp_install_launch.sh $1 $2 > /root/logs/install_log_all.log 2>&1
+#删除临时文件
+rm -rf /root/dhdp/dhdp-$version
 
 echo 'execute dhdp_install.sh end ...'
 
