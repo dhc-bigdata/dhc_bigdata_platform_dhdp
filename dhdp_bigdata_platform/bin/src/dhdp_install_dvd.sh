@@ -1,9 +1,9 @@
 #!/bin/bash
 #############################################################################
-#程序名:一键安装pssh
-#功能描述:一键安装pssh
+#程序名:一键挂载镜像
+#功能描述:一键挂载镜像
 #作者:   liukai
-#创建日期: 20190424
+#创建日期: 20190507
 #输入:     日期 v_data_DATE              ($1)
 #输出: res 
 #系统变量： 执行上一个指令的返回值     ($?)
@@ -13,13 +13,14 @@
 #  修改日期:
 #  修改内容:
 ##############################################################################
-##下载上传pssh到/usr/local/pssh目录
-mkdir mkdir
 
-mount -o loop -t iso9660 CentOS-7-x86_64-Everything-1611.iso /media
+mkdir /root/dhdp
 
-jinrin n /etc/yum.repos.dwenjismk
+mount -o loop -t iso9660 CentOS-7-x86_64-DVD-1810.iso /media
 
+mkdir -p /etc/yum.repos.d/bak
+cd /etc/yum.repos.d/
+cp *.repo ./bak
 rm  -f ./CentOS-Media.repo
 touch  ./CentOS-Media.repo
 
@@ -36,3 +37,14 @@ gpgcheck=1
 #校验文件（密钥）文件地址
 gpgkey=file:///media/RPM-GPG-KEY-CentOS-7
 " >> CentOS-Media.repo
+
+sed -i '/enabled=0/i\name=' CentOS-Base.repo
+
+yum clean all
+
+yum makecache
+
+yum repolist all
+
+cd .
+
