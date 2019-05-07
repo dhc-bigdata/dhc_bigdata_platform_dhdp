@@ -13,5 +13,6 @@
 #  修改日期:
 #  修改内容:
 ##############################################################################
-v_order=$1
-pssh -${v_order}  ./conf/conf_ops/hosts
+v_parameter=$1
+v_order=$2
+pssh -${v_parameter}  ./conf/conf_ops/hosts  ${v_order}
