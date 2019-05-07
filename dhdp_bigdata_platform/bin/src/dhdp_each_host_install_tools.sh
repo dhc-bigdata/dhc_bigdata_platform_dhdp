@@ -1,11 +1,16 @@
 #!/bin/bash
 #安装基础软件、以及工具  比如pssh、java、mysql
 
-dhdp_bin_dir=/home/hadoop/dhdp/bin/
+dhdp_bin_dir=/home/hadoop/dhdp/bin/src/
 hostname=`hostname`
 
 function install_tools(){
-
+	
+	#挂载镜像
+	cd $dhdp_bin_dir
+	
+	mount_os
+	
 	#安装基础软件
 	yum install -y ncurses-devel gcc*  openssh-clients openssh-server
 	yum install -y zlib-devel autoconf* automake libtool* cmake openssl-devel fuse-devel
