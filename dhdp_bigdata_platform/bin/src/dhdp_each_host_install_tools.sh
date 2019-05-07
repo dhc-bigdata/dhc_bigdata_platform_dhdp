@@ -11,7 +11,7 @@ function install_tools(){
 	yum install -y zlib-devel autoconf* automake libtool* cmake openssl-devel fuse-devel
 	yum install -y unzip zip vim* dos2unix expect telnet*
 	yum install -y net-tools firewalld* systemd*
-	yum install -y lzo-devel snappy-devel
+	yum install -y lzo-devel snappy-devel ntp ntpdate
 	check dependence_library
 
 	#安装pssh
