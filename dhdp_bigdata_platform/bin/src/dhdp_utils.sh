@@ -59,6 +59,6 @@ function mount_os(){
 if [ $hostname == "hadoop01" ];then
 	sync_time
 else
-   echo "0-59/1 * * * * /usr/sbin/ntpdate hadoop01" > crontab
+   echo "0-59/1 * * * * /usr/sbin/ntpdate hadoop01" > /etc/crontab
 fi
 
