@@ -8,5 +8,18 @@ function Doc2Unix(){
 		echo 'converting '$file
 	done
 	}
+	if [ $hostname == "hadoop01" ];then
+            sync_time
+    fi
+function sync_time(){
+    echo "sync_time begin......"
+    rm -rf /etc/ntp.conf
+    cp /home/hadoop/dhdp/conf/sync_time/ntp.conf /etc
+    echo "SYNC_HWCLOCK=yes
+    OPTIONS='-u ntp:ntp -p /var/run/ntpd.pid -g'"  >  /etc/sysconfig/ntpd
+    systemctl disable ntpd.service
+    systemctl enable ntpd.service
+    echo "sync_time end......"
+}
 Doc2Unix $1
 

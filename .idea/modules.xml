@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/dhc_bigdata_platform_dhdp.iml" filepath="$PROJECT_DIR$/.idea/dhc_bigdata_platform_dhdp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/dhc_bigdata_platform_dhdp.iml" filepath="$PROJECT_DIR$/dhc_bigdata_platform_dhdp.iml" />
     </modules>
   </component>
 </project>
