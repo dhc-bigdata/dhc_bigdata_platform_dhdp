@@ -10,7 +10,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="dhdp_bigdata_platform" target="1.8" />
+      <module name="dhdp_bigdata_platform" target="1.7" />
     </bytecodeTargetLevel>
   </component>
 </project>
