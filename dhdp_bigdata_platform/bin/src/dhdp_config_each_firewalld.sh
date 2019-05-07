@@ -31,21 +31,7 @@ function check(){
 	fi
 	echo '[-] check status then wirite to log end ...'
 	}
-#安装各种依赖库
-function install_dependence_library(){
-	echo '----------------------------------------------------------------------------'
-	echo '[+] execute install_dependence_library begin ...'
-	if [ "x$USER" != "xroot" ];then
-		return
-	fi
-	yum install -y ncurses-devel gcc*  openssh-clients openssh-server
-	yum install -y zlib-devel autoconf* automake libtool* cmake openssl-devel fuse-devel
-	yum install -y unzip zip vim* dos2unix expect telnet*
-	yum install -y net-tools firewalld* systemd*
-	yum install -y lzo-devel snappy-devel
-	check dependence_library
-	echo '[-] execute install_dependence_library end ...'
-}
+
 #关闭防火墙，禁止开机启动
 #firewall
 function CloseFirewall(){
@@ -89,7 +75,6 @@ function CloseSelinux(){
 #main
 function main(){
 	echo "Deploy Linux *****`date +"%Y-%m-%d_%H-%M-%S"`*****"
-	install_dependence_library
 	CloseFirewall
 	CloseSelinux
 }
