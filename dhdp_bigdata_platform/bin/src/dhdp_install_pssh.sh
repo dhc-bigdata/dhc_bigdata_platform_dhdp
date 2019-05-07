@@ -16,6 +16,7 @@
 ##下载上传pssh到/usr/local/pssh目录
 mkdir /usr/local/pssh
 pssh_install_dir=/home/hadoop/core
+echo 'execute dhdp_install_pssh.sh start ...'
 ## 将安装包解压到安装位置，不输出日志
 tar -xzvf /home/hadoop/core/pssh-1.4.1.tar.gz
 
@@ -31,3 +32,4 @@ python setup.py install
 
 ##查看版本号
 pssh --version
+echo 'execute dhdp_install_pssh.sh end ...'
