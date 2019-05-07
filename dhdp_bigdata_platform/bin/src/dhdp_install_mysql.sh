@@ -154,7 +154,7 @@ function main(){
         if [ "x$1" == "xinstall" ];then
             install_each_host_mysql
         elif [ "x$1" == "xinit" ];then
-            ciyu_each_host_mysql_init
+            dhdp_each_host_mysql_init
         else
             echo '[-] explain:[mode] should be in (install | init) ...'
             return

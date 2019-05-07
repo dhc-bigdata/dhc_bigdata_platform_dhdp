@@ -15,39 +15,21 @@
 ##############################################################################
 ##下载上传pssh到/usr/local/pssh目录
 mkdir /usr/local/pssh
-pssh_install_dir=/home/hadoop/core
+pssh_install_dir=/home/hadoop/tools/package/
+echo 'execute dhdp_install_pssh.sh start ...'
 ## 将安装包解压到安装位置，不输出日志
-tar -xzvf /home/hadoop/core/pssh-1.4.1.tar.gz
+tar -xzvf /home/hadoop/tools/package/pssh-1.4.1.tar.gz
 
 ##上传setuptools-0.6c11.tar.gz 到/usr/local/pssh/pssh-1.4.1 并解压
-tar xzf /home/hadoop/core/pssh-1.4.1/setuptools-0.6c11.tar.gz
-cd /home/hadoop/core/pssh-1.4.1/setuptools-0.6c11
+tar xzf /home/hadoop/tools/package/pssh-1.4.1/setuptools-0.6c11.tar.gz
+cd /home/hadoop/tools/package/pssh-1.4.1/setuptools-0.6c11
 python setup.py build
 python setup.py install
 ##进入pssh目录
-cd /home/hadoop/core/pssh-1.4.1
+cd /home/hadoop/tools/package/pssh-1.4.1
 python setup.py build
 python setup.py install
-##在 /root/.ssh/目录下创建rsa.sh test.txt文件
-mkdir  /root/.ssh/
 
-cd /root/.ssh/
-touch rsa.sh
-touch test.txt
-touch id_rsa.pub
-touch id_rsa
-##服务器ip写入test.txt文件中
-echo '192.168.222.301' >>/root/.ssh/test.txt
-echo '192.168.222.302' >>/root/.ssh/test.txt
-echo '192.168.222.303' >>/root/.ssh/test.txt
- more rsa.sh
-#!/bin/sh
-#by authors chy 2016
-for i in $(cat test.txt)
-do
-        ssh-copy-id -i /root/.ssh/id_rsa.pub $i
-        expect "password:"
-        send "hadoop123"
-        echo $i"设置密码登录成功"
-done
-
+##查看版本号
+pssh --version
+echo 'execute dhdp_install_pssh.sh end ...'

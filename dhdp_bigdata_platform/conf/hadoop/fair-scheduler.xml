@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<allocations>	
+	<queue name="hainiu">
+		<!-- 最小资源 -->
+		<minResources>512 mb,1 vcores</minResources>
+		<!-- 最大资源 -->
+		<maxResources>6140 mb,3 vcores</maxResources>
+		<!-- 最大运行的任务数 -->
+		<maxRunningApps>50</maxRunningApps>
+		<!-- 资源池权重 -->
+		<weight>2.0</weight>
+		<!-- 队列内部调度策略,可选的有：fair、fifo、drf -->
+		<schedulingPolicy>fair</schedulingPolicy>
+		<!-- 
+			允许提交任务的用户名和组；
+			格式为： 用户名 用户组
+			当有多个用户时候，格式为：用户名1,用户名2 用户名1所属组,用户名2所属组
+		-->
+		<aclSubmitApps>hainiu</aclSubmitApps>
+		<!-- 
+			允许管理任务的用户名和组；
+			格式同上。
+		-->
+		<aclAdministerApps>hainiu</aclAdministerApps>
+	</queue>
+
+	<queue name="default">
+		<weight>1.0</weight>
+		<aclSubmitApps>*</aclSubmitApps>
+		<aclAdministerApps>*</aclAdministerApps>
+	</queue>
+	
+	<!-- user节点只有一个子节点 -->
+	<user name="root">
+		<maxRunningApps>500</maxRunningApps>
+	</user>
+	<!-- 用户的maxRunningJobs属性的默认值 -->
+	<userMaxAppsDefault>50</userMaxAppsDefault>
+	<!-- 队列的schedulingMode属性的默认值 默认是fair-->
+	<defaultQueueSchedulingPolicy>fair</defaultQueueSchedulingPolicy>
+	<!--  一个队列在共享资源量低于其最小share时，开始从其它队列抢占资源前的等待时间，以秒计算 -->
+	<fairSharePreemptionTimeout>60</fairSharePreemptionTimeout>
+	<!--  一个队列在共享资源量低于其最小share时，开始从其它队列抢占资源前的等待时间，以秒计算 -->
+	<defaultMinSharePreemptionTimeout>60</defaultMinSharePreemptionTimeout>
+	
+	<queuePlacementPolicy>
+		<rule name="specified" create="false" />
+		<rule name="user" create="false" />
+		<rule name="reject" />
+	</queuePlacementPolicy>
+</allocations>
