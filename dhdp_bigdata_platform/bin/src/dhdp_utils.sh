@@ -10,8 +10,3 @@ function Doc2Unix(){
 	}
 Doc2Unix $1
 
-function mount_os(){
-
-ss
-}
-
