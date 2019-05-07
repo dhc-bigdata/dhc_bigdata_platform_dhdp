@@ -13,6 +13,9 @@
 #  修改日期:
 #  修改内容:
 ##############################################################################
+##主目录
 v_parameter=$1
+##需上传至目录
 v_order=$2
 pssh -${v_parameter}  ./conf/conf_ops/hosts  ${v_order}
+pscp -h ./conf/conf_ops/hosts ${v_parameter} ${v_order}
