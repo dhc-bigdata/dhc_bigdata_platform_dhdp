@@ -92,8 +92,8 @@ function install_each_host_mysql(){
           echo "[+] The function install_each_host_mysql end......"
         }
 ###安装模式下对mysql进行初始化
-function ciyu_each_host_mysql_init(){
-         echo "[+] The function ciyu_each_host_mysql_init start......"
+function dhdp_each_host_mysql_init(){
+         echo "[+] The function dhdp_each_host_mysql_init start......"
          if [ "x$USER" != "xhadoop" ];then
             echo "[-] You must use the hadoop user to initialize mysql ......"
             return
@@ -140,7 +140,7 @@ function ciyu_each_host_mysql_init(){
 				}
 				expect eof
 				EOF
-        echo "[+] The function hlk_each_host_mysql_init end......"
+        echo "[+] The function dhdp_each_host_mysql_init end......"
                                 }
 
  ##该脚本入口方法,$1:需要调用该脚本中的函数名,$2、$3...为调用函数所需的参数
