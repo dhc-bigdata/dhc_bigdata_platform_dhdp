@@ -18,11 +18,11 @@ mkdir /usr/local/pssh
 pssh_install_dir=/home/hadoop/tools/package/
 echo 'execute dhdp_install_pssh.sh start ...'
 ## 将安装包解压到安装位置，不输出日志
+cd /home/hadoop/tools/package/
 tar -xzvf /home/hadoop/tools/package/pssh-1.4.1.tar.gz
-
 ##上传setuptools-0.6c11.tar.gz 到/usr/local/pssh/pssh-1.4.1 并解压
-tar xzf /home/hadoop/tools/package/pssh-1.4.1/setuptools-0.6c11.tar.gz
-cd /home/hadoop/tools/package/pssh-1.4.1/setuptools-0.6c11
+tar -xzvf /home/hadoop/tools/package/setuptools-0.6c11.tar.gz
+cd /home/hadoop/tools/package/setuptools-0.6c11
 python setup.py build
 python setup.py install
 ##进入pssh目录
