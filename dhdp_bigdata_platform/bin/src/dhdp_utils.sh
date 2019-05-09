@@ -35,7 +35,7 @@ function mount_os(){
 	touch  ./CentOS-Media.repo
 	
 	echo "
-	[CentOS 7.3 1611]
+	[CentOS 7.6 1810]
 	#命名
 	name=CentOS-$releasever - Everything_ISO
 	#该镜像源已启用，若为0，则禁用
