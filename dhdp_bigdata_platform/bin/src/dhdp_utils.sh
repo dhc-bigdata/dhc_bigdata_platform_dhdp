@@ -1,4 +1,5 @@
 #! /bin/bash
+
 #文本及脚本文件格式如windows转Unix参考命令dos2unix
 #-e 转义反斜扛字符 -n 禁止换行 \b 删除前一个字符 \n 换行且光标移至行首
 IFS=$(echo -en "\n\b")
@@ -34,7 +35,7 @@ function mount_os(){
 	touch  ./CentOS-Media.repo
 	
 	echo "
-	[CentOS 7.3 1611]
+	[CentOS 7.6 1810]
 	#命名
 	name=CentOS-$releasever - Everything_ISO
 	#该镜像源已启用，若为0，则禁用
