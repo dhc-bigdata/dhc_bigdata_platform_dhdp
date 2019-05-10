@@ -21,7 +21,6 @@ start_seconds=$(date --date="$starttime" +%s);
 
 dhdp_home=/home/hadoop/dhdp
 #安装pssh以简化此后操作
-bash $dhdp_home/bin/src/dhdp_install_pssh.sh
 
 
 #结束时间
