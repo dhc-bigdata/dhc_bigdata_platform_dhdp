@@ -1,20 +1,27 @@
 #!/bin/bash
-##下载上传pssh到/usr/local/pssh目录
-dhdp_package_dir=/home/hadoop/dhdp/tools/package #安装包存放目录
-echo 'execute dhdp_install_pssh.sh start ...'
-## 将安装包解压到安装位置，不输出日志
-cd /home/hadoop/dhdp/tools/package
-tar -xzvf /home/hadoop/dhdp/tools/package/pssh-1.4.1.tar.gz
-##上传setuptools-0.6c11.tar.gz 到/usr/local/pssh/pssh-1.4.1 并解压
-tar -xzvf /home/hadoop/dhdp/tools/package/setuptools-0.6c11.tar.gz
-cd /home/hadoop/dhdp/tools/package/setuptools-0.6c11
-python setup.py build
-python setup.py install
-##进入pssh目录
-cd /home/hadoop/dhdp/tools/package/pssh-1.4.1
-python setup.py build
-python setup.py install
+#使用root用户操作
+echo 'execute dhdp_install_pssh.sh begin ...'
+if [ "x$USER" != "xroot" ];then
+	echo "[-] Install using the root user..."
+	exit 1
+fi
 
-##查看版本号
+
+version=2.3.1
+version_own=`pssh --version 2>&1`	#python version是错误输出，不是标准输出
+
+if [[ x$version_own == x*$version* ]];then
+	echo "pssh is already install. version: $version_own"
+	cd /home/hadoop/dhdp/tools/package/ && rm -rf pssh-2.3.1	#将可能存在的垃圾文件删除
+	exit 0
+fi
+
+cd /home/hadoop/dhdp/tools/package/ && tar -zxf pssh-2.3.1.tar.gz && cd pssh-2.3.1
+python setup.py install
+cd /home/hadoop/dhdp/tools/package/ && rm -rf pssh-2.3.1
+
+echo 'pssh version:'
 pssh --version
+echo ''
+
 echo 'execute dhdp_install_pssh.sh end ...'
