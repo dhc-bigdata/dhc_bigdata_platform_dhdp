@@ -52,6 +52,8 @@ gpgkey=file:///media/CentOS7/RPM-GPG-KEY-CentOS-7
 
    yum makecache
 
+   yum repolist all
+
 }
 if [ $hostname == "hadoop01" ];then
 	sync_time
