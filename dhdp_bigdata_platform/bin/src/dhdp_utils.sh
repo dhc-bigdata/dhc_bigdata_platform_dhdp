@@ -25,7 +25,7 @@ function sync_time(){
 
 #挂载镜像
 function mount_os(){
-    mkdir -p /media/CentOS7
+   mkdir -p /media/CentOS7
    mount -o loop -t iso9660 /root/dhdp/CentOS-7-x86_64-DVD-1810.iso /media/CentOS7
    ##在/etc/fstab文件里最后一行添加这行代码
 
@@ -36,23 +36,21 @@ function mount_os(){
    mv CentOS-Media.repo CentOS-Media.repo_bak
    touch CentOS-Media.repo
    echo "
-   [centos7-media]
+[centos7-media]
 
-     name=centos7
+name=centos7
 
-     baseurl=file:///media/CentOS7
+baseurl=file:///media/CentOS7
 
-     enabled=1
+enabled=1
 
-     gpgcheck=0
+gpgcheck=0
 
-     gpgkey=file:///media/CentOS7/RPM-GPG-KEY-CentOS-7
-   " >> CentOS-Media.repo
+gpgkey=file:///media/CentOS7/RPM-GPG-KEY-CentOS-7
+" >> CentOS-Media.repo
    mv CentOS-Base.repo CentOS-Base.repo.bak
 
    yum makecache
-
-   yum repolist all
 
 }
 if [ $hostname == "hadoop01" ];then
