@@ -7,7 +7,7 @@ import xml.dom.minidom, sys
 class XmlUtils:
 	#读取xml文件得到每个host的hosts
 	def read_xml_hosts(self):
-		docxml = xml.dom.minidom.parse("/home/hadoop/dhdp/conf_ops/dhdp_hosts.xml")  #加载xml文件 路径需要改动
+		docxml = xml.dom.minidom.parse("/home/hadoop/dhdp/conf/conf_ops/dhdp_hosts.xml")  #加载xml文件 路径需要改动
 		root = docxml.documentElement  # 获取元素的根节点
 		hosts = root.getElementsByTagName('host')  #获取子节点数组
 		return hosts
@@ -28,9 +28,12 @@ class XmlUtils:
 		hostNameList = []
 		for host in hosts:
 			hostname = host.getElementsByTagName("hostname")[0]
+			
 			hostNameList.append(hostname.childNodes[0].data)
-		for i in hostNameList:
-			print(i)
+			
+		#for i in hostNameList:
+		#	print(i)
+		return hostNameList
 	#读取集群的各节点的root密码
 	def get_cluster_root_passwd(self, hosts):
 		rootPasswd = ''
