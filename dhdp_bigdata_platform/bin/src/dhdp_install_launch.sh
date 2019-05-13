@@ -46,17 +46,4 @@ cd /home/hadoop/dhdp/bin/src && bash dhdp_install_inner.sh $mode
 
 echo 'execute dhdp_install_one_key_launch.sh end ...'
 
-#hosts=`cat /home/hadoop/dhdp/conf/conf_ops/hosts`
-#
-#for host in $hosts;do
-#    /usr/bin/expect <<EOF
-#	set timeout 120
-#	spawn ssh -o stricthostkeychecking=no root@$host
-#	expect "]#"  {send "cd $dhdp_dir && bash dhdp_each_host_init.sh \n"}
-#	expect "]#"  {send "cd $dhdp_dir && bash dhdp_each_host_init_resource.sh \n"}
-#	expect "]#"  {send "cd $dhdp_dir && bash dhdp_each_host_install_tools.sh \n"}
-#	expect "]#"  {send "exit\n"}
-#	#expect eof
-#EOF
-#done
 
