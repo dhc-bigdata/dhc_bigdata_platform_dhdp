@@ -10,10 +10,16 @@ fi
 #配置集群内各主机的hostname
 bash $dhdp_home/bin/src/dhdp_init_hostname.sh
 
-#配置防火墙
-bash $dhdp_home/bin/src/dhdp_config_each_firewalld.sh
-	
+#配置防火墙以及关闭seLinux
+hosts=`python $dhdp_home/bin/src/dhdp_hadoop_xml_utils.py hostname`
+for host in $hosts;do
+	dhdp_pssh.sh -H $host "bash $dhdp_home/bin/src/dhdp_config_each_firewalld.sh"
+done
+
 #初始化用户
+for host in $hosts;do
+	dhdp_pssh.sh -H $host "bash $dhdp_home/bin/src/dhdp_each_host_config_user.sh"
+done
 bash $dhdp_home/bin/src/dhdp_each_host_config_user.sh
 
 #生成公私钥以及分发公私钥
@@ -36,7 +42,7 @@ EOF
 done
 
 #初始化集群本地资源
-dhdp_pssh "bash $dhdp_bin_dir/src/dhdp_init_local_rescource.sh"
+dhdp_pssh.sh -h "bash $dhdp_bin_dir/src/dhdp_init_local_rescource.sh"
 
 #初始化hdoop资源
 bash $dhdp_bin_dir/src/dhdp_init_hadoop_resource.sh
