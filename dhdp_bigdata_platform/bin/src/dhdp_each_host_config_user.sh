@@ -1,4 +1,4 @@
-#!/bin/bash
+#！/bin/bash
 
 user=hadoop
 dhdp_home=/home/hadoop/dhdp
