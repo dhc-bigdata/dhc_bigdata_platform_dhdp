@@ -8,7 +8,7 @@ if [ "x$USER" != "xroot" ];then
 fi
 
 #配置集群内各主机的hostname
-init_hostname
+bash $dhdp_home/bin/src/dhdp_init_hostname.sh
 
 #配置防火墙
 bash $dhdp_home/bin/src/dhdp_config_each_firewalld.sh

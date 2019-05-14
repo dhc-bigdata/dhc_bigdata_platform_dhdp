@@ -20,11 +20,40 @@ starttime=`date +'%Y-%m-%d %H:%M:%S'`
 start_seconds=$(date --date="$starttime" +%s);
 
 dhdp_home=/home/hadoop/dhdp
+source /root/.bashrc
 #获取集群主机名
 hosts=`python $dhdp_home/bin/src/dhdp_hadoop_xml_utils.py hostname`
 
-#分发dhdp软件包
+#为第一台主机安装工具使其拥有expect能力和pssh能力
+function first_host_install_tools(){
+	#挂载镜像
+	. $dhdp_bin_dir/dhdp_utils.sh && mount_os
+	
+	#安装工具
+	. $dhdp_home/bin/src/dhdp_each_host_install_tools.sh && install_tools
+	
+}
 
+#初始化集群
+bash $dhdp_home/bin/src/dhdp_each_host_init.sh
+
+#分发dhdp软件包
+#读取除过第一台主机的其他主机名
+delete_first_hosts=`python dhdp_xml_delete_hostname.py`
+for host in $delete_first_hosts;do
+
+	echo "------>Synchronize dhdp start<------"
+	echo pscp -r -H $host $dhdp_home /home/hadoop
+	pscp -r -e /var/log/pssh/pscp -H $host $dhdp_home/ /home/hadoop/	
+	dhdp_pssh.sh -H $host "chown -R hadoop:hadoop /home/hadoop/dhdp"
+	echo "------>Synchronize dhdp start<------"
+	
+	echo "------>Synchronize iso start<------"
+	dhdp_pssh -H $host "mkdir /root/dhdp"
+	dhdp_pscp.sh -H $host /root/dhdp/CentOS-7-x86_64-DVD-1810.iso /root/dhdp/
+	echo "------>Synchronize iso start<------"
+
+done
 #复制xml文件到conf
 /usr/bin/expect <<-EOF
         #set timeout 30
@@ -38,25 +67,6 @@ EOF
 echo ". /home/hadoop/dhdp/bin/src/dhdp_utils.sh" >> /root/.bashrc
 source /root/.bashrc
 
-#给第一台主机安装软件
-
-function first_host_install(){
-	#挂载镜像
-	mount_os
-	
-	#安装工具
-	. $dhdp_home/bin/src/dhdp_each_host_install_tools.sh && install_tools
-	
-}
-
-#初始化集群
-bash $dhdp_home/bin/src/dhdp_each_host_init.sh
-
-
-#循环使用pssh在每台机器执行安装
-for host in $hosts;do
-    echo "主机名+"$host
-done
 
 
 #结束时间
