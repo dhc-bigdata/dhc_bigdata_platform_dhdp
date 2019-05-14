@@ -5,7 +5,6 @@ IFS=$(echo -en "\n\b")
 function Doc2Unix(){
 	for file in $1/*; do
 		dos2unix $file
-		echo 'converting '$file
 	done
 }
 
