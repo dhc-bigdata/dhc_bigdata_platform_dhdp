@@ -1,4 +1,5 @@
 #!/bin/bash
-v_parameter=$1
-v_order=$2
-pssh -${v_parameter}  /home/hadoop/dhdp/conf/conf_ops/hosts  ${v_order}
+
+v_order=$1
+log_dir=/var/log/pssh/pssh
+pssh -e $log_dir  -h /home/hadoop/dhdp/conf/conf_ops/hosts  ${v_order}
