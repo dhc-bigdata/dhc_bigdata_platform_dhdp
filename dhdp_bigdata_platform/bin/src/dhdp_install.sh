@@ -26,7 +26,7 @@ fi
 version=$1
 
 echo "uncompress dhdp_install_launch.sh ..."
-cd /root/dhdp && tar -zxf dhdp-$version.tar.gz
+cd /root/dhdp && tar -zxf dhdp-$version.tar.gz dhdp-$version/bin/src/dhdp_install_launch.sh
 
 echo "bash dhdp_install_launch.sh. show log in /root/logs/install_log_all.log ..."
 mkdir -p /root/logs

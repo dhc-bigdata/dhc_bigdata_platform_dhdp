@@ -8,7 +8,6 @@ function Doc2Unix(){
 		echo 'converting '$file
 	done
 }
-Doc2Unix $1
 
 #时间同步	
 function sync_time(){
@@ -56,9 +55,55 @@ function mount_os(){
 	yum repolist all
 
 }
-if [ $hostname == "hadoop01" ];then
-	sync_time
-else
-   echo "0-59/1 * * * * /usr/sbin/ntpdate hadoop01" > /etc/crontab
-fi
+
+function init_hostname(){
+	ips=`获取ips脚本`
+	/usr/bin/expect <<EOF
+		set timeout 120
+		
+		for ip in $ips;do
+			spawn ssh -o stricthostkeychecking=no root@$ip
+			expect {
+					"(yes/no)" {send "yes\r"; exp_continue}
+					"password:" {send "${root_password}\n; exp_continue"}
+			}
+			expect "]#"  {send "echo $ip > /etc/hosts \n"}
+			expect "]#"  {send "exit\n"}
+			#expect eof
+		done
+EOF
+
+}
+
+function ssh_key_gen(){
+		rm -rf /root/.ssh
+		/usr/bin/expect <<-EOF
+		set timeout 300
+		spawn ssh-keygen -t rsa
+		expect {
+				*(/root/.ssh/id_rsa)* {send -- \r;exp_continue;}
+				*passphrase)*	{send -- \r;exp_continue;}
+				*again*	 {send -- \r;exp_continue;}
+		}
+		EOF
+		
+}
+
+function ssh_copy_id(){
+		/usr/bin/expect <<-EOF
+		set timeout 300
+			spawn ssh-copy-id $1
+		expect {
+				*(yes/no)* {send -- yes\r;exp_continue;}
+				*password:* {send -- root\r;exp_continue;}
+		}
+		EOF
+}
+function ssh_copy_id_all(){
+		SERVERS=`获取主机名`
+		for SERVER in $SERVERS
+		do
+			ssh_copy_id $SERVER
+		done
+}
 

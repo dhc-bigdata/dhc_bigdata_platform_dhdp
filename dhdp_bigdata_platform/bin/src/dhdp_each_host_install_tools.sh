@@ -25,16 +25,6 @@ function install_tools(){
 	if [ $ret != 0 ];then
 		exit $ret
 	fi
-
-	#安装pssh
-	bash $dhdp_bin_dir/dhdp_install_pssh.sh
-	ret=$?
-	if [ $ret != 0 ];then
-		exit $ret
-	fi
-
-
-
 }
 
 function install_database(){
