@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<hosts>
+        <host>
+                <IP>192.168.222.130</IP>
+                <hostname>hadoop01</hostname>
+                <password_root>root</password_root>
+                <password_hadoop>hadoop</password_hadoop>
+                <memory>2</memory>              <!--单位GB-->
+                <processes>DFSZKFailoverController,Master,Kafka,NameNode,NodeManager,HRegionServer,QuorumPeerMain,ResourceManager,JournalNode,HMaster,DataNode,Worker</processes>
+        </host>
+        <host>
+                <IP>192.168.222.131</IP>
+                <hostname>hadoop02</hostname>
+                <password_root>root</password_root>
+                <password_hadoop>hadoop</password_hadoop>
+                <memory>2</memory>
+                <processes>QuorumPeerMain,NameNode,JournalNode,HRegionServer,DFSZKFailoverController,ResourceManager,Worker,NodeManager,Master,Kafka,HMaster,DataNode</processes>
+        </host>
+        <host>
+                <IP>192.168.222.132</IP>
+                <hostname>hadoop03</hostname>
+                <password_root>root</password_root>
+                <password_hadoop>hadoop</password_hadoop>
+                <memory>2</memory>
+                <processes>mysqld,mysqld_safe,QuorumPeerMain,JournalNode,DataNode,NodeManager,HRegionServer,Kafka,Worker</processes>
+        </host>
+</hosts>

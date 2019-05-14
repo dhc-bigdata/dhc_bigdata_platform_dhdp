@@ -1,0 +1,228 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+
+	<!-- 重要 start -->
+	<property>
+		<name>mapreduce.task.io.sort.mb</name>
+		<value>128</value>
+		<description>排序内存使用限制</description>
+	</property>
+	
+	<property>
+		<name>mapreduce.framework.name</name>
+		<value>yarn</value>
+		<description>运行模式</description>
+	</property>
+	
+ 	<property>
+		<name>yarn.app.mapreduce.am.resource.mb</name>
+		<value>256</value>
+		<description>MR ApplicationMaster yarn申请的内存量</description>
+	</property>
+	
+	<property>
+		<name>yarn.app.mapreduce.am.command-opts</name>
+		<value>-Xmx128m</value>
+		<description>jvm使用内存</description>
+	</property>
+	
+	<property>
+		<name>yarn.app.mapreduce.am.resource.cpu-vcores</name>
+		<value>1</value>
+		<description>MR ApplicationMaster占用的虚拟CPU个数，此参数对应yarn.nodemanager.resource.cpu-vcores，建议最大为一个物理CPU的数量</description>
+	</property>
+	
+	<property>
+		<name>mapreduce.map.speculative</name>
+		<value>true</value>
+		<description>是否对Map Task启用推测执行机制</description>
+	</property>
+	
+	<property>
+		<name>mapreduce.reduce.speculative</name>
+		<value>true</value>
+		<description>是否对Reduce Task启用推测执行机制</description>
+	</property>
+	
+	<property>
+		<name>mapreduce.map.memory.mb</name>
+		<value>512</value>
+		<description>每个Map Task yarn申请内存</description>
+	</property>
+	
+	<property>
+		<name>mapreduce.reduce.memory.mb</name>
+		<value>512</value>
+		<description>每个Reduce Task yarn申请内存</description>
+	</property>
+	
+	<property>
+ 		<name>mapreduce.reduce.java.opts</name>
+ 		<value>-Xmx410m</value>
+ 		<description>reduce jvm实际内存</description>
+ 	</property>
+	
+ 	<property>
+ 		<name>mapreduce.map.java.opts</name>
+ 		<value>-Xmx410m</value>
+ 		<description>map jvm实际内存</description>
+ 	</property>
+	
+	<property>
+		<name>mapreduce.map.cpu.vcores</name>
+		<value>1</value>
+		<description>每个map Task需要的虚拟cpu数</description>
+	</property>
+	
+	<property>
+		<name>mapreduce.reduce.cpu.vcores</name>
+		<value>1</value>
+		<description>每个Reduce Task需要的虚拟cpu数</description>
+	</property>
+	
+	<property>
+		<name>mapreduce.application.classpath</name>
+		<value>/home/hadoop/dhdp/core/hadoop/etc/hadoop,/home/hadoop/dhdp/core/hadoop/share/hadoop/common/*,/home/hadoop/dhdp/core/hadoop/share/hadoop/common/lib/*,/home/hadoop/dhdp/core/hadoop/share/hadoop/hdfs/*,/home/hadoop/dhdp/core/hadoop/share/hadoop/hdfs/lib/*,/home/hadoop/dhdp/core/hadoop/share/hadoop/mapreduce/*,/home/hadoop/dhdp/core/hadoop/share/hadoop/mapreduce/lib/*,/home/hadoop/dhdp/core/hadoop/share/hadoop/yarn/*,/home/hadoop/dhdp/core/hadoop/share/hadoop/yarn/lib/*,/home/hadoop/dhdp/core/hadoop/lib/*,/home/hadoop/dhdp/core/hbase/lib/*</value>
+		<description>运行mr程序所使用的虚拟机运行时的classpath</description>
+	</property>
+	
+	<property>
+		<name>mapreduce.job.queuename</name>
+		<value>dhdp</value>
+		<description>提交mr任务时所使用的队列</description>
+		<!--<value>${hadoop.job.queuename}</value>-->
+	</property>
+	
+	<property>
+		<name>mapreduce.job.counters.limit</name>
+		<value>20000</value>
+		<description>mr允许使用的计数器的最大上限</description>
+	</property>
+	
+	<property>
+		<name>mapreduce.map.output.compress</name> 
+		<value>true</value>
+		<description>map是否开启输出压缩</description>
+	</property>
+	
+	<property>
+		<name>mapreduce.map.output.compress.codec</name>
+		<value>org.apache.hadoop.io.compress.SnappyCodec</value>
+		<description>map输出默认的算法</description>
+	</property>
+	<!-- 重要 end -->	
+
+	<!-- 目录相关 start -->
+	<property>
+		<name>mapreduce.local.dir</name>
+		<value>/home/hadoop/dhdp/data/mapreduce/data</value>
+	</property>
+	
+	<property>
+		<name>mapreduce.system.dir</name>
+		<value>/home/hadoop/dhdp/data/mapreduce/system</value>
+		<final>true</final>
+	</property>
+	
+	<property>
+		<name>mapreduce.jobhistory.intermediate-done-dir</name>
+		<value>/home/hadoop/dhdp/logs/mapred/tmp</value>
+		<description>MapReduce作业产生的日志存放位置</description>
+	</property>	
+	
+	<property>
+		<name>mapreduce.jobhistory.done-dir</name>
+		<value>/home/hadoop/dhdp/logs/mapred/done</value>
+		<description>MR JobHistory Server管理的日志的存放位置</description>
+	</property>
+	<!-- 目录相关 end -->
+	
+	
+	<!-- 其它 -->
+	<property>
+ 		<name>mapreduce.task.io.sort.factor</name>
+ 		<value>20</value>
+ 	</property>
+	
+ 	<property>
+ 		<name>yarn.app.mapreduce.am.job.task.listener.thread-count</name>
+ 		<value>60</value>
+ 	</property>
+
+	<property>
+		<name>mapreduce.reduce.shuffle.parallelcopies</name>
+		<value>24</value>
+		<description>每个reduce并行下载map结果的最大线程数</description>
+	</property>
+	
+	<property>
+		<name>mapred.reduce.copy.backoff</name>
+		<value>600</value>
+		<description>reduce下载线程最大等待时间（insec）</description>
+	</property>
+	
+	<property>
+		<name>mapreduce.tasktracker.http.threads</name>
+		<value>40</value>
+		<description>map和reduce是通过http进行数据传输的，这个是设置传输的并行线程数</description>
+	</property>
+	
+	<property>
+		<name>mapreduce.job.jvm.numtasks</name>
+		<value>-1</value>
+	</property>
+	
+	<property>
+		<name>mapreduce.jobtracker.tasktracker.maxblacklists</name>
+		<value>10</value>
+	</property>
+	
+	<property>
+		<name>mapreduce.jobtracker.blacklist.average.threshold</name>
+		<value>0.8</value>
+	</property>
+
+	<property>
+		<name>mapreduce.jobhistory.address</name>
+		<value>hadoop01:10020</value>
+		<description>MapReduce JobHistory Server地址</description>
+	</property>
+	
+	<property>
+		<name>mapreduce.jobhistory.webapp.address</name>
+		<value>hadoop01:19888</value>
+		<description>MapReduce JobHistory Server Web UI地址</description>
+	</property>
+
+	<property>
+		<name>mapreduce.jobhistory.move.thread-count</name>
+		<value>6</value>
+	</property>
+	
+	<property>
+		<name>mapreduce.jobhistory.move.interval-ms</name>
+		<value>60000</value>
+	</property>
+
+ 	<property>
+ 		<name>mapreduce.job.userlog.retain.hours</name>
+ 		<value>48</value>
+ 	</property>
+	
+	<property>
+		<name>mapreduce.jobhistory.max-age-ms</name>
+		<value>259200000</value>
+	</property>
+	
+	<property>
+		<name>mapreduce.jobhistory.cleaner.interval-ms</name>
+		<value>3600000</value>
+	</property>
+	
+	<property>
+		<name>mapreduce.job.ubertask.enable</name>
+		<value>true</value>
+	</property>
+
+</configuration>
