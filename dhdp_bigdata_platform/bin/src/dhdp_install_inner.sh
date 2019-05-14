@@ -67,7 +67,7 @@ function share_dhdp(){
 		echo "------>Synchronize dhdp start<------"
 		
 		echo "------>Synchronize iso start<------"
-		dhdp_pssh -H $host "mkdir /root/dhdp"
+		dhdp_pssh.sh -H $host "mkdir /root/dhdp"
 		dhdp_pscp.sh -H $host /root/dhdp/CentOS-7-x86_64-DVD-1810.iso /root/dhdp/
 		echo "------>Synchronize iso start<------"
 	done
