@@ -1,22 +1,14 @@
 #!/bin/bash
-#####################################################################
-#					CentOS7 初始化									#
-#各主机安装基本软件：openssh-server vim gcc gcc-c++ glibc-headers 	#
-#bzip2-devel lzo-devel curl wget openssh-clients zlib-devel expect	#
-#autoconf automake cmake libtool openssl-devel fuse-devel dos2unix 	#
-#snappy-devel telnet unzip zip net-tools.x86_64 firewalld systemd、 #
-#配置防火墙永久关闭、关闭SELinux）									#
-#####################################################################
-dhdp_bin=/home/hadoop/dhdp/bin #shell脚本存放目录
-dhdp_data=/home/hadoop/dhdp/data #数据目录
-dhdp_conf=/home/hadoop/dhdp/conf #最新的配置文件存放目录
-dhdp_core=/home/hadoop/dhdp/core #大数据组件安装目录
-dhdp_package=/home/hadoop/dhdp/package #安装包存放目录
-dhdp_log=/home/hadoop/dhdp/logs #集群存放日志
-dhdp_share=/home/hadoop/dhdp/share #集群文档存放目录
+#dhdp_bin=/home/hadoop/dhdp/bin #shell脚本存放目录
+#dhdp_data=/home/hadoop/dhdp/data #数据目录
+#dhdp_conf=/home/hadoop/dhdp/conf #最新的配置文件存放目录
+#dhdp_core=/home/hadoop/dhdp/core #大数据组件安装目录
+#dhdp_package=/home/hadoop/dhdp/package #安装包存放目录
+dhdp_log=/root/logs #集群存放日志
+#dhdp_share=/home/hadoop/dhdp/share #集群文档存放目录
 
 #定义日志文件存放的位置
-log_file=$dhdp_log/install.log
+log_file=$dhdp_log/install_firewall.log
 #如果文件夹不存在，则创建
 [ ! -d dhdp_log ] && mkdir -pdhdp_log] && mkdir -pdhdp_log
 #检查执行状态，将状态写入日志文件
