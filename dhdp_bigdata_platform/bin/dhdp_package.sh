@@ -17,7 +17,9 @@ rm -rf $full_dhdp_dir && mkdir -p $full_dhdp_dir
 cd /home/hadoop/dhdp/ && cp -rv bin conf tools share README.md $full_dhdp_dir
 
 #处理bin、conf下换行符格式
-dos2unix $full_dhdp_dir/bin/* $full_dhdp_dir/bin/src/* $full_dhdp_dir/conf/*
+. dhdp_utils.sh && Doc2Unix $full_dhdp_dir/bin/*
+. dhdp_utils.sh && Doc2Unix $full_dhdp_dir/bin/src/*
+. dhdp_utils.sh && Doc2Unix $full_dhdp_dir/conf/*
 
 #打包前处理用户组权限
 chown -R hadoop:hadoop $full_dhdp_dir
