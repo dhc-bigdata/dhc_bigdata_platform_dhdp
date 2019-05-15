@@ -45,5 +45,6 @@ done
 dhdp_pssh.sh -h "bash $dhdp_bin_dir/src/dhdp_init_local_rescource.sh"
 
 #初始化hdoop资源
+
 bash $dhdp_bin_dir/src/dhdp_init_hadoop_resource.sh
 

@@ -39,6 +39,7 @@ if [[ $is_uncompressed != "-u" ]];then		#-u表示已解压过，不需要再进�
 	#用新文件夹替换原文件夹
 	echo "mv $file_name_prefix_tar to /home/hadoop/dhdp ..."
 	rm -rf /home/hadoop/dhdp && mv /root/dhdp/$file_name_prefix_tar /home/hadoop/dhdp
+	#处理bin、conf下所有文件中换行符格式
 	. /root/dhdp/$file_name_prefix_tar/bin/src/dhdp_utils.sh Doc2Unix /home/hadoop/bin/* /home/hadoop/conf/*
 fi
 

@@ -20,7 +20,8 @@ starttime=`date +'%Y-%m-%d %H:%M:%S'`
 start_seconds=$(date --date="$starttime" +%s);
 
 dhdp_home=/home/hadoop/dhdp
-source /root/.bashrc
+#获取集群主机名
+hosts=`python $dhdp_home/bin/src/dhdp_hadoop_xml_utils.py hostname`
 
 #复制xml文件到conf
 /usr/bin/expect <<-EOF
@@ -32,8 +33,7 @@ source /root/.bashrc
         #expect eof
 EOF
 
-#获取集群主机名
-hosts=`python $dhdp_home/bin/src/dhdp_hadoop_xml_utils.py hostname`
+
 
 #为第一台主机安装工具使其拥有expect能力和pssh能力
 function first_host_install_tools(){
