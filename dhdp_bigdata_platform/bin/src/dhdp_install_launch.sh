@@ -43,7 +43,7 @@ if [[ $is_uncompressed != "-u" ]];then		#-u表示已解压过，不需要再进�
 	. /root/dhdp/$file_name_prefix_tar/bin/src/dhdp_utils.sh Doc2Unix /home/hadoop/bin/* /home/hadoop/conf/*
 fi
 
-echo "execute dhdp_install_one_key_inner.sh ..."
+echo "execute dhdp_install_inner.sh ..."
 cd /home/hadoop/dhdp/bin/src && bash dhdp_install_inner.sh $mode
 
 echo 'execute dhdp_install_one_key_launch.sh end ...'
