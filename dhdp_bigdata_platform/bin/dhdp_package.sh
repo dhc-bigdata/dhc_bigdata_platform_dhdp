@@ -31,6 +31,5 @@ mkdir -p $full_dhdp_dir/core && cd /home/hadoop/dhdp/core && cp -r hadoop hbase 
 
 #进行打包
 cd /home/hadoop && tar -zcvf $tar_dhdp_name".tar.gz" $tar_dhdp_name && mv $tar_dhdp_name".tar.gz" /root/dhdp/ && rm -rf $tar_dhdp_name
-echo "show dhdp-1.0.tar to /root/dhdp/---------"
 
 echo 'execute dhdp_package.sh end ...'

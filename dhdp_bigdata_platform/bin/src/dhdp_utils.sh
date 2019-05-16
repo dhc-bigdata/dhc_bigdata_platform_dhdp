@@ -1,4 +1,14 @@
 #! /bin/bash
+
+#定义脚本变量
+dhdp_home=/home/hadoop/dhdp
+#获取集群主机名
+hosts=`python $dhdp_home/bin/src/dhdp_hadoop_xml_utils.py hostname`
+ips=`python $dhdp_home/bin/src/dhdp_hadoop_xml_utils.py IPs`
+iphosts=`python $dhdp_home/bin/src/dhdp_read_ip_hostname.py`
+hostname=hadoop0
+hpid=0
+
 #文本及脚本文件格式如windows转Unix参考命令dos2unix
 #-e 转义反斜扛字符 -n 禁止换行 \b 删除前一个字符 \n 换行且光标移至行首
 IFS=$(echo -en "\n\b")
@@ -54,23 +64,37 @@ gpgkey=file:///media/CentOS7/RPM-GPG-KEY-CentOS-7
 
 }
 
+
+function init_hosts(){
+    echo "$iphosts" >> /etc/hosts
+
+    for ip in $ips;do
+        /usr/bin/expect <<-EOF
+        set timeout 300
+        spawn scp /etc/hosts root@$ip:/etc
+        expect {
+				#*(yes/no)* {send -- yes\r;exp_continue;}
+				*password:* {send -- root\r;exp_continue;}
+        }
+		EOF
+    done
+}
+
 function init_hostname(){
-	ips=`获取ips脚本`
-	/usr/bin/expect <<EOF
-		set timeout 120
-		
-		for ip in $ips;do
+        for ip in $ips;do
+			((hpid++))
+			/usr/bin/expect <<-EOF
+			set timeout 300
 			spawn ssh -o stricthostkeychecking=no root@$ip
 			expect {
 					"(yes/no)" {send "yes\r"; exp_continue}
-					"password:" {send "${root_password}\n; exp_continue"}
+					"password:" {send "root\n; exp_continue"}
 			}
-			expect "]#"  {send "echo $ip > /etc/hosts \n"}
+			expect "]#"  {send "echo '$hostname$hpid'  >> /etc/hostname \n"}
 			expect "]#"  {send "exit\n"}
 			#expect eof
+			EOF
 		done
-EOF
-
 }
 
 function ssh_key_gen(){

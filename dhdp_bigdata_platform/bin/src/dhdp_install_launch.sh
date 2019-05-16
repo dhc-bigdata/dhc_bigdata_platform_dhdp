@@ -2,7 +2,11 @@
 dhdp_dir=/home/hadoop/dhdp/bin/
 
 echo 'execute dhdp_install_one_key_launch.sh begin ...'
-
+function usage(){
+	echo '[-] Usage: dhdp_install_lanuch.sh [version] [mode] [-u]'
+	echo 'mode should be in (install)'
+	echo '-u means that the pressure has been decompressed and no further decompression is needed to save time '
+}
 if [ "x$USER" != "xroot" ];then
 	echo "[-] Install using the root user."
 	exit 1
