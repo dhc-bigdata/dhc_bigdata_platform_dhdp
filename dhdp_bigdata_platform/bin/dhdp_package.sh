@@ -8,7 +8,7 @@ if [ "x$USER" != "xroot" ];then
 fi
 #读取集群版本
 version=`cat /home/hadoop/dhdp/conf/conf_ops/dhdp_version`
-
+dhdp_dir=/home/hadoop/dhdp
 tar_dhdp_name="dhdp-"$version
 full_dhdp_dir=/home/hadoop/$tar_dhdp_name
 
@@ -17,10 +17,12 @@ rm -rf $full_dhdp_dir && mkdir -p $full_dhdp_dir
 cd /home/hadoop/dhdp/ && cp -rv bin conf tools share README.md $full_dhdp_dir
 
 #处理bin、conf下换行符格式
-. dhdp_utils.sh && Doc2Unix $full_dhdp_dir/bin/*
-. dhdp_utils.sh && Doc2Unix $full_dhdp_dir/bin/src/*
-. dhdp_utils.sh && Doc2Unix $full_dhdp_dir/conf/*
-
+dos2unix /home/hadoop/dhdp/bin/*.sh
+. $dhdp_dir/bin/src/dhdp_utils.sh && Doc2Unix $full_dhdp_dir/bin/src/
+confs=`ls $dhdp_dir/conf`
+for conf_dir in $confs;do
+	. $dhdp_dir/bin/src/dhdp_utils.sh && Doc2Unix $dhdp_dir/conf/$conf_dir
+done
 #打包前处理用户组权限
 chown -R hadoop:hadoop $full_dhdp_dir
 
@@ -28,6 +30,7 @@ mkdir -p $full_dhdp_dir/core && cd /home/hadoop/dhdp/core && cp -r hadoop hbase 
 
 
 #进行打包
-cd /home/hadoop && tar -zcvf $tar_dhdp_name".tar.gz" $tar_dhdp_name && mv $tar_dhdp_name".tar.gz" /root/dwhdp/ && rm -rf $tar_dhdp_name
+cd /home/hadoop && tar -zcvf $tar_dhdp_name".tar.gz" $tar_dhdp_name && mv $tar_dhdp_name".tar.gz" /root/dhdp/ && rm -rf $tar_dhdp_name
+echo "show dhdp-1.0.tar to /root/dhdp/---------"
 
 echo 'execute dhdp_package.sh end ...'

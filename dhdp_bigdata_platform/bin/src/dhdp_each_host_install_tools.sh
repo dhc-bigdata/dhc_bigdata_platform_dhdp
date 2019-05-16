@@ -12,7 +12,6 @@ function install_tools(){
 	yum install -y unzip zip vim* expect telnet*
 	yum install -y net-tools firewalld* systemd*
 	yum install -y lzo-devel snappy-devel ntp ntpdate
-	check dependence_library
 
 	#安装pssh
 	bash $dhdp_bin_dir/dhdp_install_pssh.sh

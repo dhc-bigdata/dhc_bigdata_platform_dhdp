@@ -28,8 +28,6 @@ for host in $hosts;do
 	dhdp_pssh.sh -H $host "bash $dhdp_home/bin/src/dhdp_each_host_config_user.sh"
 done
 
-
-
 #初始化集群本地资源
 dhdp_pssh.sh -h "bash $dhdp_bin_dir/src/dhdp_init_local_rescource.sh"
 
