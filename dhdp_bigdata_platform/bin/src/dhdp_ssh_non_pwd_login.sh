@@ -3,7 +3,6 @@
 #ips=`python dhdp_hadoop_xml_utils.py IPs`
 ips="192.168.120.115 192.168.120.116"
 hosts="hadoop01 hadoop02"
-ssh_three
 function ssh_three(){
 for ip in $ips;
                 do

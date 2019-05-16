@@ -6,15 +6,10 @@ hostname=`hostname`
 
 function install_tools(){
 	
-	#挂载镜像
-	cd $dhdp_bin_dir
-	
-	mount_os
-	
 	#安装基础软件
 	yum install -y ncurses-devel gcc*  openssh-clients openssh-server
 	yum install -y zlib-devel autoconf* automake libtool* cmake openssl-devel fuse-devel
-	yum install -y unzip zip vim* dos2unix expect telnet*
+	yum install -y unzip zip vim* expect telnet*
 	yum install -y net-tools firewalld* systemd*
 	yum install -y lzo-devel snappy-devel ntp ntpdate
 	check dependence_library
