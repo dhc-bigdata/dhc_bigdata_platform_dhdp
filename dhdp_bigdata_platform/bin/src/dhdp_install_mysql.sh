@@ -150,7 +150,7 @@ function main(){
         echo '[-] explain:mode should be in (install | init) ...'
         return
     fi
-    
+
     if [ "x$1" == "xinstall" ];then
         install_each_host_mysql
     elif [ "x$1" == "xinit" ];then
