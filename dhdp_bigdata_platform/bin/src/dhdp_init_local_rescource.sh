@@ -8,9 +8,9 @@ passwds=`python /home/hadoop/dhdp/bin/dhdp_hadoop_xml_utils.py hadoop_password`
 
 function init_resource(){
 
-for host in $hosts;do
-	/usr/bin/expect <<-EOF
-
+    for host in $hosts;
+    do
+	    /usr/bin/expect <<-EOF
 		spawn ssh -o stricthostkeychecking=no hadoop@$host
 		set timeout 300
 
@@ -34,9 +34,9 @@ for host in $hosts;do
 			expect "*]*"  {send "mkdir -p $dhdp_data_dir/hive \n"}
 			expect "*]*"  {send "mkdir -p $dhdp_data_dir/spark \n"}
 			expect "*]*"  {send "exit \n"}
-			expect eof
-EOF
-done
+		    expect eof
+		EOF
+    done
 }
 
 
