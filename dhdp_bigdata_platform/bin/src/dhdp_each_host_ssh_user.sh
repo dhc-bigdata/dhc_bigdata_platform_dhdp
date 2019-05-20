@@ -8,7 +8,7 @@ hostname5s=`python $dhdp_home/bin/src/dhdp_hadoop_xml_utils.py hostname`
 function ssh_user(){
 	ssh_key_gen
 	for hostname1 in $hostname1s;do
-	ssh_copy_id $1 $hostname1
+	    ssh_copy_id $1 $hostname1
 	done
 }
 function ssh_first(){
