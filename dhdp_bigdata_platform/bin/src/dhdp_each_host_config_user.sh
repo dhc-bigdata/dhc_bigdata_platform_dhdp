@@ -15,6 +15,7 @@ function config_user(){
 	/usr/bin/expect <<-EOF
 	set timeout 120
 	spawn passwd $user
+	expect "*ssh/id_rsa):" {send "$user\n"}
 	expect "New password:" {send "$user\n"}
 	expect "Retype new password:" {send "$user\n"}
 	expect eof

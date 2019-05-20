@@ -27,6 +27,7 @@ function sync_time(){
     OPTIONS='-u ntp:ntp -p /var/run/ntpd.pid -g'"  >  /etc/sysconfig/ntpd
     systemctl disable ntpd.service
     systemctl enable ntpd.service
+	echo " "
     echo "sync_time end......"
 }
 
@@ -73,7 +74,7 @@ function init_hosts(){
         set timeout 300
         spawn scp /etc/hosts root@$ip:/etc
         expect {
-				#*(yes/no)* {send -- yes\r;exp_continue;}
+				*(yes/no)* {send -- yes\r;exp_continue;}
 				*password:* {send -- root\r;exp_continue;}
         }
 		EOF
@@ -81,6 +82,7 @@ function init_hosts(){
 }
 
 function init_hostname(){
+	rm -rf /root/.ssh
         for ip in $ips;do
 			((hpid++))
 			/usr/bin/expect <<-EOF
@@ -90,42 +92,12 @@ function init_hostname(){
 					"(yes/no)" {send "yes\r"; exp_continue}
 					"password:" {send "root\n; exp_continue"}
 			}
-			expect "]#"  {send "echo '$hostname$hpid'  >> /etc/hostname \n"}
+			expect "]#"  {send "rm -rf /root/.ssh \n"}
+			expect "]#"  {send "echo '$hostname$hpid'  > /etc/hostname \n"}
 			expect "]#"  {send "exit\n"}
 			#expect eof
 			EOF
 		done
 }
 
-function ssh_key_gen(){
-		rm -rf /root/.ssh
-		/usr/bin/expect <<-EOF
-		set timeout 300
-		spawn ssh-keygen -t rsa
-		expect {
-				*(/root/.ssh/id_rsa)* {send -- \r;exp_continue;}
-				*passphrase)*	{send -- \r;exp_continue;}
-				*again*	 {send -- \r;exp_continue;}
-		}
-		EOF
-		
-}
-
-function ssh_copy_id(){
-		/usr/bin/expect <<-EOF
-		set timeout 300
-			spawn ssh-copy-id $1
-		expect {
-				*(yes/no)* {send -- yes\r;exp_continue;}
-				*password:* {send -- root\r;exp_continue;}
-		}
-		EOF
-}
-function ssh_copy_id_all(){
-		SERVERS=`获取主机名`
-		for SERVER in $SERVERS
-		do
-			ssh_copy_id $SERVER
-		done
-}
 
