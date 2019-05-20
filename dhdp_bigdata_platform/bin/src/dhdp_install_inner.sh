@@ -161,7 +161,7 @@ fi
 #初始化集群环境变量
 for host in $hosts;do
 	$dhdp_home/bin/dhdp_pssh.sh -H $host "rm -rf /home/hadoop/.bashrc"
-	$dhdp_home/bin/dhdp_pssh.sh -H $host "rm -rf /r.bashrc"
+	$dhdp_home/bin/dhdp_pssh.sh -H $host "rm -rf /.bashrc"
 	$dhdp_home/bin/dhdp_pssh.sh -H $host "\cp $dhdp_home/conf/conf_ops/dhdp_env /home/hadoop/.bashrc"
 	$dhdp_home/bin/dhdp_pssh.sh -H $host "\cp $dhdp_home/conf/conf_ops/dhdp_root_env /root/.bashrc"
 	$dhdp_home/bin/dhdp_pssh.sh -H $host "source /home/hadoop/.bashrc"
