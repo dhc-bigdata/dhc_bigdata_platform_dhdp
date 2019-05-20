@@ -67,20 +67,10 @@
 # You might get better performance to enable these options if using native BLAS (see SPARK-21305).
 # - MKL_NUM_THREADS=1        Disable multi-threading of Intel MKL
 # - OPENBLAS_NUM_THREADS=1   Disable multi-threading of OpenBLAS
-export JAVA_HOME=/home/hadoop/dhdp/core/jdk1.8
 
-export SCALA_HOME=/home/hadoop/dhdp/core/scala
-
-export HADOOP_HOME=/home/hadoop/dhdp/core/hadoop
-
-export HADOOP_CONF_DIR=/home/hadoop/dhdp/core/hadoop/etc/hadoop
-
-export SPARK_MASTER_IP=hadoop01
-
-export SPARK_WORKER_MEMORY=4g
-
-export SPARK_WORKER_CORES=3
-
-export SPARK_WORKER_INSTANCES=1
-
-
+export JAVA_HOME=/home/hadoop/dhdp/core/jdk
+export SPARK_DAEMON_JAVA_OPTS="-Dspark.deploy.recoveryMode=ZOOKEEPER -Dspark.deploy.zookeeper.url=hadoop01,hadoop02,hadoop03 -Dspark.deploy.zookeeper.dir=/spark"
+export SPARK_HISTORY_OPTS="-Dspark.history.ui.port=18080 -Dspark.history.retainedApplications=30 -Dspark.history.fs.logDirectory=hdfs://dhdpha/sparklog"
+export SPARK_MASTER_PORT=7077
+export HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop
+export SPARK_LOG_DIR=/home/hadoop/dhdp/logs/spark

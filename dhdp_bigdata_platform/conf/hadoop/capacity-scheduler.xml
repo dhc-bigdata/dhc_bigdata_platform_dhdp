@@ -83,7 +83,7 @@
 
   <property>
     <name>yarn.scheduler.capacity.root.default.acl_submit_applications</name>
-    <value>hadoop</value>
+    <value>*</value>
     <description>
       The ACL of who can submit jobs to the default queue.
     </description>
@@ -91,7 +91,7 @@
 
   <property>
     <name>yarn.scheduler.capacity.root.default.acl_administer_queue</name>
-    <value>hadoop</value>
+    <value>*</value>
     <description>
       The ACL of who can administer jobs on the default queue.
     </description>
@@ -105,6 +105,29 @@
       attempts to schedule rack-local containers. 
       Typically this should be set to number of nodes in the cluster, By default is setting 
       approximately number of nodes in one rack which is 40.
+    </description>
+  </property>
+
+  <property>
+    <name>yarn.scheduler.capacity.queue-mappings</name>
+    <value></value>
+    <description>
+      A list of mappings that will be used to assign jobs to queues
+      The syntax for this list is [u|g]:[name]:[queue_name][,next mapping]*
+      Typically this list will be used to map users to queues,
+      for example, u:%user:%user maps all users to queues with the same name
+      as the user.
+    </description>
+  </property>
+
+  <property>
+    <name>yarn.scheduler.capacity.queue-mappings-override.enable</name>
+    <value>false</value>
+    <description>
+      If a queue mapping is present, will it override the value specified
+      by the user? This can be used by administrators to place jobs in queues
+      that are different than the one specified by the user.
+      The default is false.
     </description>
   </property>
 

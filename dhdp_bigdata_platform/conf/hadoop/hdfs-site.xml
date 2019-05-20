@@ -1,167 +1,127 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License. See accompanying LICENSE file.
+-->
+
+<!-- Put site-specific property overrides in this file. -->
+
 <configuration>
-	<!--主要的-->
+<!-- 指定副本数 -->
+    <property>
+         <name>dfs.replication</name>
+         <value>2</value>
+    </property>
+    <!--指定 hdfs 的 nameservice 为 dhdpha1803，需要和 core-site.xml 中保持一致-->
+    <property>
+         <name>dfs.nameservices</name>
+         <value>dhdpha</value>
+    </property>
+    <!-- dhdpha1803下面有两个 NameNode，分别是 nn1，nn2(别名)随意起 -->
+    <property>
+         <name>dfs.ha.namenodes.dhdpha</name>
+         <value>nn1,nn2</value>
+    </property>
+    <!-- nn1 的 RPC 通信地址 -->
+    <property>
+         <name>dfs.namenode.rpc-address.dhdpha.nn1</name>
+         <value>hadoop01:9000</value>
+    </property>
+    <!-- nn1 的 http 通信地址 -->
+    <property>
+        <name>dfs.namenode.http-address.dhdpha.nn1</name>
+        <value>hadoop01:50070</value>
+    </property>
+    <!-- nn2 的 RPC 通信地址 -->
+    <property>
+         <name>dfs.namenode.rpc-address.dhdpha.nn2</name>
+         <value>hadoop02:9000</value>
+    </property>
+    <!-- nn2 的 http 通信地址 -->
+    <property>
+         <name>dfs.namenode.http-address.dhdpha.nn2</name>
+         <value>hadoop02:50070</value>
+    </property>
+    <!-- 指定 NameNode 的 edits 元数据在 JournalNode 8485上的存放位置 多个之间使用分号 -->
+    <property>
+         <name>dfs.namenode.shared.edits.dir</name>
+         <value>qjournal://hadoop01:8485;hadoop02:8485;hadoop03:8485/dhdpha</value>
+    </property>
+    <!-- 指定 JournalNode 在本地磁盘存放数据的位置 -->
+    <property>
+         <name>dfs.journalnode.edits.dir</name>
+         <value>/home/hadoop/dhdp/data/journalnode</value>
+    </property>
+    <!-- 开启 NameNode 失败自动切换 -->
+    <property>
+         <name>dfs.ha.automatic-failover.enabled</name>
+         <value>true</value>
+    </property>
+    <!-- 配置失败自动切换实现方式 -->
+    <!-- 此处配置在安装的时候切记检查不要换行-->
+    <property>
+         <name>dfs.client.failover.proxy.provider.dhdpha</name>
+         <value>org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider</value>
+    </property>
+	<!-- 配置隔离机制方法，多个机制用换行分割，即每个机制暂用一行，在standby切换的时候，防止死亡的active假死-->
+    <property>
+         <name>dfs.ha.fencing.methods</name>
+         <value>
+             sshfence
+             shell(/bin/true)
+         </value>
+    </property>
+    <!-- 使用 sshfence 隔离机制时需要 ssh 免登陆 私钥地址 -->
+    <property>
+         <name>dfs.ha.fencing.ssh.private-key-files</name>
+         <value>/home/hadoop/.ssh/id_rsa</value>
+    </property>
+    <!-- 配置 sshfence 隔离机制超时时间 -->
+    <property>
+         <name>dfs.ha.fencing.ssh.connect-timeout</name>
+         <value>30000</value>
+    </property>
+	
+	
+	<!-- 配置对NameNode Web UI的SSL访问 -->
 	<property>
-		<name>dfs.datanode.data.dir</name>
-		<value>/home/hadoop/dhdp/data/hadoop/dfs/datanode</value>
-		<description>datanode本地文件存放地址</description>
-	</property>
-	<!--主要的-->
-	<property>
-		<name>dfs.replication</name>
-		<value>3</value>
-		<description>文件复本数</description>
-	</property>
-	<!--主要的-->
-	<property>
-		<name>dfs.namenode.name.dir</name>
-		<value>/home/hadoop/dhdp/data/hadoop/namenode</value>
-		<description>namenode本地文件存放地址</description>
-	</property>
-	<!--主要的-->
-	<property>
-		<name>dfs.support.append</name>
+		<name>dfs.webhdfs.enabled</name>
 		<value>true</value>
-		<description>是否支持追加</description>
-	</property>
-	<!--主要的-->
-	<property>
-		<name>dfs.permissions.enabled</name>
-		<value>true</value>
-		<description>是否开启目录权限</description>
-	</property>
-	<!--主要的-->
-	<property>
-		<name>dfs.nameservices</name>
-		<value>ns1</value>
-		<description>提供服务的NS逻辑名称，与core-site.xml里的对应</description>
 	</property>
 	<property>
-	  <name>dfs.permissions.superusergroup</name>
-	  <value>hadoop</value>
-	  <description>The name of the group of super-users.
-	  The value should be a single group name.
+		<name>dfs.http.policy</name>
+		<value>HTTP_ONLY</value>
+		<description>Decide if HTTPS(SSL) is supported on HDFS
+			This configures the HTTP endpoint for HDFS daemons:
+			The following values are supported:
+				- HTTP_ONLY : Service is provided only on http
+				- HTTPS_ONLY : Service is provided only on https
+				- HTTP_AND_HTTPS : Service is provided both on http and https
 	  </description>
 	</property>
-	<!--主要的-->
 	<property>
-		<name>dfs.ha.namenodes.ns1</name>
-		<value>nn1,nn2</value>
-		<description>列出该逻辑名称下的NameNode逻辑名称</description>
+		<name>dfs.namenode.https-address</name>
+		<value>0.0.0.0:50070</value>
 	</property>
-	<!--主要的-->
 	<property>
-		<name>dfs.namenode.rpc-address.ns1.nn1</name>
-		<value>hadoop01:9000</value>
-		<description>指定NameNode的RPC位置</description>
-	</property>
-	<!--主要的-->
-	<property>
-		<name>dfs.namenode.http-address.ns1.nn1</name>
-		<value>hadoop01:50070</value>
-		<description>指定NameNode的Web Server位置</description>
-	</property>
-	<!--主要的-->
-	<property>
-		<name>dfs.namenode.rpc-address.ns1.nn2</name>
-		<value>hadoop02:9000</value>
-		<description>指定NameNode的RPC位置</description>
-	</property>
-	<!--主要的-->
-	<property>
-		<name>dfs.namenode.http-address.ns1.nn2</name>
-		<value>hadoop02:50070</value>
-		<description>指定NameNode的Web Server位置</description>
-	</property>
-	<!--主要的-->
-	<property>
-		<name>dfs.namenode.shared.edits.dir</name>
-		<value>qjournal://hadoop01:8485;hadoop02:8485/ns1</value>
-		<description>指定用于HA存放edits的共享存储，通常是namenode的所在机器</description>
-	</property>
-	<!--主要的-->
-	<property>
-		<name>dfs.journalnode.edits.dir</name>
-		<value>/home/hadoop/dhdp/data/journaldata</value>
-		<description>journaldata服务存放文件的地址</description>
+		<name>dfs.permissions.supergroup</name>
+		<value>hadoop</value>
+		<description>The name of the group of super-users.</description>
 	</property>
 	
-	<property>
-		<name>dfs.ha.fencing.methods</name>
-		<value>sshfence</value>
-		<description>指定HA做隔离的方法，缺省是ssh，可设为shell，稍后详述</description>
-	</property>
 	
 	<property>
-		<name>dfs.ha.fencing.ssh.private-key-files</name>
-		<value>/home/hadoop/.ssh/id_rsa</value>
-	</property>
-	
-	<property>
-		<name>dfs.client.failover.proxy.provider.ns1</name>
-		<value>org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider</value>
-		<description>指定客户端用于HA切换的代理类，不同的NS可以用不同的代理类以上示例为Hadoop 2.0自带的缺省代理类</description>
-	</property>
-	
-	<property>
-	 <name>dfs.client.failover.proxy.provider.auto-ha</name>
-	 <value>org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider</value>
-	</property>	
-	
-	<property>
-		<name>dfs.ha.automatic-failover.enabled</name>
-		<value>true</value>
-	</property>
-	<!--主要的-->
-	<property>
-		<name>fs.trash.interval</name>
-		<value>2880</value>
-		<description>回收周期</description>
-	</property>
-	<property>
-		<name>dfs.datanode.balance.bandwidthPerSec</name>
-		<value>104857600</value>
-	</property>
-	<property>
-		<name>dfs.namenode.handler.count</name>
-		<value>77</value>
-	</property>
-	<!--主要的-->
-	<property>
-		<name>dfs.blocksize</name>
-		<value>268435456</value>
-		<description>文件块的大小</description>
-	</property>
-	<!--	DataNode	-->
-	<property>
-		<name>dfs.datanode.max.transfer.threads</name>
-		<value>8192</value>
-		<description>相当于linux下的打开文件最大数量，文档中无此参数，当出现DataXceiver报错的时候，需要调大。默认256</description>
-	</property>
-	<!--主要的-->		
-	<property>
-		<name>dfs.datanode.du.reserved</name>
-		<value>2147483648</value>
-		<description>每个存储卷保留用作其他用途的磁盘大小</description>
-	</property>
-	<property>
-		<name>dfs.datanode.fsdataset.volume.choosing.policy</name>
-		<value>org.apache.hadoop.hdfs.server.datanode.fsdataset.AvailableSpaceVolumeChoosingPolicy</value>
-		<description>存储卷选择策略</description>
-	</property>
-
-	<property>
-		<name>dfs.datanode.available-space-volume-choosing-policy.balanced-space-threshold</name>
-		<value>2147483648</value>
-		<description>允许的卷剩余空间差值，2G</description>
-	</property>
-	<property>
-		<name>dfs.client.read.shortcircuit</name>
-		<value>true</value>
-	</property>
-	<property>
-		<name>dfs.domain.socket.path</name>
-		<value>/home/hadoop/dhdp/data/hadoop/dfs/socket</value>
-	</property>
+        <name>dfs.journalnode.http-address</name>
+        <value>0.0.0.0:8480</value>
+    </property>
 </configuration>
