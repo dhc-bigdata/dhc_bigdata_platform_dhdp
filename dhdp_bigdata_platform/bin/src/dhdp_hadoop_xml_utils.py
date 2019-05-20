@@ -7,12 +7,12 @@ import xml.dom.minidom, sys
 class XmlUtils:
         #读取xml文件得到每个host的hosts
         def read_xml_hosts(self):
-                docxml = xml.dom.minidom.parse("/home/hadoop/dhdp/conf/conf_ops/dhdp_hosts.xml")  #加载xml文件 路径需要改动
+                docxml = xml.dom.minidom.parse("/home/hadoop/conf/xml/hlk_hosts.xml")  #加载xml文件 路径需要改动
                 root = docxml.documentElement  # 获取元素的根节点
                 hosts = root.getElementsByTagName('host')  #获取子节点数组
                 return hosts
-        #读取集群中的所有IP地址
-        def get_cluster_IPs(self, hosts):
+        #读取集中的所有IP地址
+        def getcluster_IPs(self, hosts):
                 IPList = []
                 #对所有的子节点进行遍历
                 for host in hosts:
@@ -22,43 +22,42 @@ class XmlUtils:
                         IPList = IP.childNodes[0].data
                         print IPList
 
-
-        #读取集群的所有hostname
-        def get_cluster_hostname(self, hosts):
+        #读取集的所有hostname
+        def getcluster_hostname(self, hosts):
                 for host in hosts:
                         hostname = host.getElementsByTagName("hostname")[0]
                         hostNameList =hostname.childNodes[0].data
                         print hostNameList
 
-        #读取集群的各节点的root密码
-        def get_cluster_root_passwd(self, hosts):
+        #读取集的各节点的root密码
+        def getcluster_root_passwd(self, hosts):
                 rootPasswd = ''
                 host = hosts[0]
                 password_root = host.getElementsByTagName("password_root")[0]
                 rootPasswd = password_root.childNodes[0].data
                 print rootPasswd
-        # 读取集群的各节点的hadoop密码
-        def get_cluster_hadoop_passwd(self, hosts):
+        # 读取群的各节点的hadoop密码
+        def getcluster_hadoop_passwd(self, hosts):
                 hadoopPasswd = ''
                 host = hosts[0]
                 password_hadoop = host.getElementsByTagName("password_hadoop")[0]
                 hadoopPasswd = password_hadoop.childNodes[0].data
                 print hadoopPasswd
-        #读取集群的各节点的memory大小
-        def get_cluster_memory_size(self, hosts):
+        #读取集的各节点的memory大小
+        def getcluster_memory_size(self, hosts):
                 for host in hosts:
                         memory = host.getElementsByTagName("memory")[0]
                         memoryList = memory.childNodes[0].data
                         print memoryList
-        #读取集群的各节点的processes列表
-        def get_cluster_processes(self, hosts):
+        #读取集的各节点的processes列表
+        def getcluster_processes(self, hosts):
                 for host in hosts:
                         process = host.getElementsByTagName("processes")[0]
                         processesList = process.childNodes[0].data
                         print processesList
 
-        #根据参数确定调用对应的方法处理
-        def get_hostname_by_IP(self, hosts, IP):
+        #根据参确定调用对应的方法处理
+        def gethostname_by_IP(self, hosts, IP):
                 hostname =''
                 for host in hosts:
                         IPTag = host.getElementsByTagName("IP")[0]
@@ -67,8 +66,8 @@ class XmlUtils:
                                 hostNameTag = host.getElementsByTagName("hostname")[0]
                                 hostname = hostNameTag.childNodes[0].data
                 print hostname
-        #根据参数调用对应的方法
-        def get_hostnamelist_by_process(self, hosts, process):
+        #根据参调用对应的方法
+        def gethostnamelist_by_process(self, hosts, process):
                 processesList = []
                 for host in hosts:
                         process = host.getElementsByTagName("processes")[0]
@@ -78,8 +77,8 @@ class XmlUtils:
                                 hostNameList = hostname.childNodes[0].data
                                 print hostNameList
 
-        #根据参数确定调用对应的方法处理
-        def handle_method_by_params(self, argv):
+        #根据参确定调用对应的方法处理
+        def hanle_method_by_params(self, argv):
                 method_name = argv[1]
                 function_params = argv  #定义方法参数
                 del function_params[0]
