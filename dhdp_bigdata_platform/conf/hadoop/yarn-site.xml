@@ -1,313 +1,156 @@
 <?xml version="1.0"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License. See accompanying LICENSE file.
+-->
 <configuration>
-	<!-- 重要开始 start -->
+<!-- 开启 RM 高可用 -->
+    <property>
+         <name>yarn.resourcemanager.ha.enabled</name>
+         <value>true</value>
+    </property>
+    <!-- 指定 RM 的 cluster id，这个myyarn是resourcemanager两个主节点的组名，可以随便起 -->
+    <property>
+         <name>yarn.resourcemanager.cluster-id</name>
+         <value>myyarn</value>
+    </property>
+    <!-- 指定 RM 的名字 -->
+    <property>
+         <name>yarn.resourcemanager.ha.rm-ids</name>
+         <value>rm1,rm2</value>
+    </property>
+    <!-- 分别指定 RM 的地址 -->
+    <property>
+         <name>yarn.resourcemanager.hostname.rm1</name>
+         <value>hadoop01</value>
+    </property>
+    <property>
+         <name>yarn.resourcemanager.hostname.rm2</name>
+         <value>hadoop02</value>
+    </property>
+    <!-- 要运行 MapReduce 程序必须配置的附属服务 -->
+    <property>
+         <name>yarn.nodemanager.aux-services</name>
+         <value>mapreduce_shuffle</value>
+     </property>
+    <!-- 启用RM故障自动恢复 -->
+    <property>
+         <name>yarn.resourcemanager.recovery.enabled</name>
+         <value>true</value>
+    </property>
+	<!-- 该节点上YARN可使用的物理内存总量,默认是8192MB,注意，如果你的节点内存资源不够8GB,则需要对应调减小这个值 -->
 	<property>
-		<name>yarn.scheduler.minimum-allocation-vcores</name>
-		<value>1</value>
-		<description>单个任务可申请的最小虚拟CPU个数</description>
+        <name>yarn.nodemanager.resource.memory-mb</name>
+        <value>2048</value>
+        <description>Amount of physical memory, in MB, that can be allocated for containers.Default:8192</description>
+    </property>
+	<!--单个任务可申请的最少物理内存量,默认是1024MB,如果一个任务申请的物理内存量少于该值,则该对应的值改为这个数-->
+	<property>
+        <name>yarn.scheduler.minimum-allocation-mb</name>
+        <value>1024</value>
+        <description>The minimum allocation for every container request at the RM, in MBs. Memory requests lower than
+            this will throw a InvalidResourceRequestException.Default:1024
+        </description>
+    </property>
+	<!--单个任务可申请的最大物理内存量,默认是8192MB,如果一个任务申请的物理内存量少于该值,则该对应的值改为这个数-->
+	<property>
+        <name>yarn.scheduler.maximum-allocation-mb</name>
+        <value>3072</value>
+        <description>The maximum allocation for every container request at the RM, in MBs. Memory requests higher than
+            this will throw a InvalidResourceRequestException.Default:8192
+        </description>
+    </property>
+	<!-- 任务每使用1MB物理内存，最多可使用虚拟内存量，默认是2.1 -->
+	<property>
+        <name>yarn.nodemanager.vmem-pmem-ratio</name>
+        <value>4</value>
+    </property>
+    <!-- 指定 resourcemanager 的状态信息存储在 zookeeper 集群上-->
+    <property>
+        <name>yarn.resourcemanager.store.class</name>
+        <value>org.apache.hadoop.yarn.server.resourcemanager.recovery.ZKRMStateStore</value>
+    </property>
+	<!-- 指定 zk 集群地址 -->
+    <property>
+         <name>yarn.resourcemanager.zk-address</name>
+         <value>hadoop01:2181,hadoop02:2181,hadoop03:2181</value>
+    </property>
+	<!-- 指定resourcemanager与zk通讯的超时时间 -->
+	<property>
+		<name>yarn.resourcemanager.zk-timeout-ms</name>
+		<value>60000</value>
+		<description>ZooKeeper session timeout in milliseconds. Session expiration
+			is managed by the ZooKeeper cluster itself, not by the client. This value is
+			used by the cluster to determine when the client's session expires.
+			Expirations happens when the cluster does not hear from the client within
+			the specified session timeout period (i.e. no heartbeat).
+		</description>
 	</property>
-	
+	<!-- 配置yarn的web ui 访问https -->
 	<property>
-		<name>yarn.scheduler.maximum-allocation-vcores</name>
-		<value>3</value>
-		<description>单个任务可申请的最大虚拟CPU个数，此参数对应yarn.nodemanager.resource.cpu-vcores，建议最大为一个物理CPU的数量</description>
+		<description>
+			This configures the HTTP endpoint for Yarn Daemons.The following
+			values are supported:
+			- HTTP_ONLY : Service is provided only on http
+			- HTTPS_ONLY : Service is provided only on https
+		</description>
+		<name>yarn.http.policy</name>
+		<value>HTTPS_ONLY</value>
 	</property>
-	
+	<!-- 指定RM1的Web端访问地址 -->
 	<property>
-		<name>yarn.nodemanager.resource.memory-mb</name>
-		<value>1024</value>
-		<description>该节点上可分配的物理内存总量</description>
-	</property>
-	
+        <name>yarn.resourcemanager.webapp.address.rm1</name>
+        <value>hadoop01:23188</value>
+    </property>
+	<!-- RM1 HTTP访问地址,查看集群信息 -->
+    <property>
+        <name>yarn.resourcemanager.webapp.https.address.rm1</name>
+        <value>hadoop01:23188</value>
+    </property>
+	<!-- 指定RM2的Web端访问地址 -->
 	<property>
-		<name>yarn.nodemanager.resource.cpu-vcores</name>
-		<value>3</value>
-		<description>该节点上YARN可使用的虚拟CPU个数，一个物理CPU对应3个虚拟CPU</description>
-	</property>	
-	
+        <name>yarn.resourcemanager.webapp.address.rm2</name>
+        <value>hadoop02:23188</value>
+    </property>
+	<!-- RM2 HTTP访问地址,查看集群信息 -->
+    <property>
+        <name>yarn.resourcemanager.webapp.https.address.rm2</name>
+        <value>hadoop02:23188</value>
+    </property>
+    <!-- 开启 YARN 集群的日志聚合功能 -->
+    <property>
+         <name>yarn.log-aggregation-enable</name>
+         <value>true</value>
+    </property>
+	<!-- YARN 集群的聚合日志最长保留时长 -->
+    <property>
+         <name>yarn.log-aggregation.retain-seconds</name>
+		 <!--7days:604800-->
+         <value>86400</value>
+    </property>
+	<!-- 配置yarn提交的app程序在hdfs上的日志存储路径 -->
 	<property>
-		<name>yarn.scheduler.maximum-allocation-mb</name>
-		<value>43008</value>
-		<description>单个任务可申请的最多物理内存量</description>
-	</property>	
-	<!-- 重要开始 end -->
-	
-	<!-- yarn ha start -->
-	<property>
-		<name>yarn.resourcemanager.ha.enabled</name>
-		<value>true</value>
-		<description>是否开启yarn ha</description>
-	</property>
-	
-	<property>
-		<name>yarn.resourcemanager.ha.automatic-failover.embedded</name>
-		<value>true</value>
-		<description>ha状态切换为自动切换</description>
-	</property>
-	
-	<property>
-		<name>yarn.resourcemanager.ha.rm-ids</name>
-		<value>rm1,rm2</value>
-		<description>RMs的逻辑id列表</description>
-	</property>
-	
-	<property>
-		<name>yarn.resourcemanager.zk-address</name>
-		<value>hadoop01:2181,hadoop02:2181,hadoop03:2181</value>
-		<description>ha状态的存储地址</description>
-	</property>
-	<!-- yarn ha end -->
-	
-	<!-- RM1 configs start -->
-	<property>
-		<name>yarn.resourcemanager.address.rm1</name>
-		<value>hadoop01:8032</value>
-		<description>ResourceManager 对客户端暴露的地址。客户端通过该地址向RM提交应用程序，杀死应用程序等</description>
-	</property>
-	
-	<property>
-		<name>yarn.resourcemanager.scheduler.address.rm1</name>
-		<value>hadoop01:8030</value>
-		<description>ResourceManager 对ApplicationMaster暴露的访问地址。ApplicationMaster通过该地址向RM申请资源、释放资源等。</description>
-	</property>
-	
-	<property>
-		<name>yarn.resourcemanager.webapp.https.address.rm1</name>
-		<value>hadoop01:8089</value>
-	</property>
-	
-	<property>
-		<name>yarn.resourcemanager.webapp.address.rm1</name>
-		<value>hadoop01:8088</value>
-		<description>ResourceManager对外web ui地址。用户可通过该地址在浏览器中查看集群各类信息。</description>
-	</property>
-	
-	<property>
-		<name>yarn.resourcemanager.resource-tracker.address.rm1</name>
-		<value>hadoop01:8031</value>
-		<description>ResourceManager 对NodeManager暴露的地址.。NodeManager通过该地址向RM汇报心跳，领取任务等。</description>
-	</property>
-	
-	<property>
-		<name>yarn.resourcemanager.admin.address.rm1</name>
-		<value>hadoop01:8033</value>
-		<description>ResourceManager 对管理员暴露的访问地址。管理员通过该地址向RM发送管理命令等</description>
-	</property>
-	<!-- RM1 configs end -->
-	
-	<!-- RM2 configs start -->
-	<property>
-		<name>yarn.resourcemanager.address.rm2</name>
-		<value>hadoop02:8032</value>
-		<description>ResourceManager 对客户端暴露的地址。客户端通过该地址向RM提交应用程序，杀死应用程序等</description>
-	</property>
-	
-	<property>
-		<name>yarn.resourcemanager.scheduler.address.rm2</name>
-		<value>hadoop02:8030</value>
-		<description>ResourceManager 对ApplicationMaster暴露的访问地址。ApplicationMaster通过该地址向RM申请资源、释放资>源等。</description>
-	</property>
-	
-	<property>
-		<name>yarn.resourcemanager.webapp.https.address.rm2</name>
-		<value>hadoop02:8089</value>
-	</property>
-	
-	<property>
-		<name>yarn.resourcemanager.webapp.address.rm2</name>
-		<value>hadoop02:8088</value>
-		<description>ResourceManager对外web ui地址。用户可通过该地址在浏览器中查看集群各类信息。</description>
-	</property>
-	
-	<property>
-		<name>yarn.resourcemanager.resource-tracker.address.rm2</name>
-		<value>hadoop02:8031</value>
-		<description>ResourceManager 对NodeManager暴露的地址.。NodeManager通过该地址向RM汇报心跳，领取任务等。</description>
-	</property>
-	
-	<property>
-		<name>yarn.resourcemanager.admin.address.rm2</name>
-		<value>hadoop02:8033</value>
-		<description>ResourceManager 对管理员暴露的访问地址。管理员通过该地址向RM发送管理命令等</description>
-	</property>
-	<!-- RM2 configs end -->
-	
-	<!-- scheduler begin -->
-	<property>
-		<name>yarn.resourcemanager.scheduler.class</name>
-		<value>org.apache.hadoop.yarn.server.resourcemanager.scheduler.fair.FairScheduler</value>
-		<description>调度器实现类</description>
-	</property>
-
-	<property>
-		<name>yarn.scheduler.fair.allocation.file</name>
-		<value>fair-scheduler.xml</value>
-		<description>自定义XML配置文件所在位置，该文件主要用于描述各个队列的属性，比如资源量、权重等</description>
-	</property>
-	
-	<property>
-		<name>yarn.scheduler.fair.user-as-default-queue</name>
-		<value>true</value>
-		<description>当应用程序未指定队列名时，是否指定用户名作为应用程序所在的队列名。如果设置为false或者未设置，所有未知队列的应用程序将被提交到default队列中，默认值为true</description>
-	</property>
-	
-	<property>
-		<name>yarn.scheduler.fair.preemption</name>
-		<value>true</value>
-		<description>是否支持抢占</description>
-	</property>
-	
-	<property>
-		<name>yarn.scheduler.fair.sizebasedweight</name>
-		<value>false</value>
-		<description>在一个队列内部分配资源时，默认情况下，采用公平轮询的方法将资源分配各各个应用程序，而该参数则提供了外一种资源分配方式：按照应用程序资源需求数目分配资源，即需求资源数量越多，分配的资源越多。默认情况下，该参数值为false</description>
-	</property>
-	
-	<property>
-		<name>yarn.scheduler.increment-allocation-mb</name>
-		<value>256</value>
-		<description>内存规整化单位，默认是1024，这意味着，如果一个Container请求资源是700mB，则将被调度器规整化为 (700mB / 256mb) *  256mb=768mb</description>
-	</property>
-	
-	<property>
-		<name>yarn.scheduler.assignmultiple</name>
-		<value>true</value>
-		<description>是否启动批量分配功能。当一个节点出现大量资源时，可以一次分配完成，也可以多次分配完成。默认情况下，参数值为false</description>
-	</property>
-	
-	<property>
-		<name>yarn.scheduler.fair.max.assign</name>
-		<value>10</value>
-		<description>如果开启批量分配功能，可指定一次分配的container数目。默认情况下，该参数值为-1，表示不限制</description>
-	</property>
-	
-	<property>
-		<name>yarn.scheduler.fair.allow-undeclared-pools</name>
-		<value>false</value>
-		<description>如果提交的队列名不存在，Scheduler会自动创建一个该队列，默认开启</description>
-	</property>
-	<!-- scheduler end -->
-
-
-	<!--目录相关 start -->
-	<property>
-		<name>yarn.nodemanager.local-dirs</name>
-		<value>/home/hadoop/dhdp/data/yarn/local</value>
-		<description>中间结果存放位置，存放执行Container所需的数据如可执行程序或jar包，配置文件等和运行过程中产生的临时数据</description>
-	</property>
-	
-	<property>
-		<name>yarn.nodemanager.log-dirs</name>
-		<value>/home/hadoop/dhdp/logs/yarn</value>
-		<description>Container运行日志存放地址（可配置多个目录）</description>
-	</property>
-	
-	<property>
-		<name>yarn.log-aggregation-enable</name>
-		<value>true</value>
-		<description>是否启用日志聚集功能</description>
-	</property>
-	
-	<property>
+		<description>Where to aggregate logs to.</description>
 		<name>yarn.nodemanager.remote-app-log-dir</name>
-		<value>/home/hadoop/dhdp/data/yarn/tmp/app-logs</value>
-		<description>当应用程序运行结束后，日志被转移到的HDFS目录（启用日志聚集功能时有效）</description>
+		<value>/tmp/logs/yarn-nodemanager</value>
 	</property>
-	<!--目录相关 end -->
-	
-	<!-- 其它 -->
-	<property>
-		<name>yarn.log-aggregation.retain-seconds</name>
-		<value>1209600</value>
-		<description>nodemanager上所有Container的运行日志在HDFS中的保存时间，保留半个月</description>
-	</property>
-	
-	<property>
-		<name>yarn.nodemanager.address</name>
-		<value>0.0.0.0:9103</value>
-	</property>
-
-	<property>
-		<name>yarn.nodemanager.health-checker.script.path</name>
-		<value>/home/hadoop/dhdp/core/hadoop/etc/hadoop/health-check.sh</value>
-		<description>健康状况检测脚本,脚本输出以“ERROR”开头的字符串，则认为节点处于不健康状态态</description>
-	</property>
-	
-	<property>
-		<name>yarn.nodemanager.aux-services</name>
-		<value>mapreduce_shuffle</value>
-		<description>NodeManager上运行的附属服务。需配置成mapreduce_shuffle，才可运行MapReduce程序</description>
-	</property>	
-	
-	<property>
-		<name>yarn.resourcemanager.cluster-id</name>
-		<value>pseudo-yarn-rm-cluster</value>
-		<description>集群的Id</description>
-	</property>
-
-	<property>
-		<name>yarn.resourcemanager.recovery.enabled</name>
-		<value>true</value>
-		<description>默认值为false，也就是说resourcemanager挂了相应的正在运行的任务在rm恢复后不能重新启动</description>
-	</property>
-	
-	<property>
-		<name>yarn.resourcemanager.store.class</name>
-		<value>org.apache.hadoop.yarn.server.resourcemanager.recovery.ZKRMStateStore</value>
-		<description>配置RM状态信息存储方式3有两种，一种是FileSystemRMStateStore,另一种是MemoryRMStateStore，还有一种目前较为主流的是zkstore</description>
-	</property>
-	
-	<property>
-		<name>yarn.resourcemanager.zk.state-store.address</name>
-		<value>hadoop01:2181,hadoop02:2181,hadoop03:2181</value>
-		<description>当使用ZK存储时，指定在ZK上的存储地址。</description>
-	</property>
-	
-	<property>
-		<name>yarn.app.mapreduce.am.scheduler.connection.wait.interval-ms</name>
-		<value>5000</value>
-	</property>	
-	
-	<property>
-		<name>yarn.nodemanager.webapp.address</name>
-		<value>0.0.0.0:8042</value>
-	</property>
-	
-	<property>
-		<name>yarn.nodemanager.localizer.address</name>
-		<value>0.0.0.0:8040</value>
-	</property>
-	
-	<property>
-		<name>yarn.nodemanager.aux-services.mapreduce.shuffle.class</name>
-		<value>org.apache.hadoop.mapred.ShuffleHandler</value>
-	</property>
-	
-	<property>
-		<name>mapreduce.shuffle.port</name>
-		<value>23080</value>
-	</property>
-	
-	<property>
-		<name>yarn.app.mapreduce.am.staging-dir</name>
-		<value>/user</value>
-	</property>
-	
-	<property>
-	 	<name>yarn.web-proxy.address</name>
-		<value>hadoop01:8041</value>
-	</property>
-	<!-- 关闭内存检测 -->	
-	<property>
-			<name>yarn.nodemanager.vmem-check-enabled</name>
-			<value>false</value>
-			<description>虚拟内存检测，默认是True</description>
-	</property>
-	
-	<property>
-			<name>yarn.nodemanager.pmem-check-enabled</name>
-			<value>false</value>
-			<description>物理内存检测，默认是True</description>
-	</property>	
-	
+   
+    <property>
+     	 <name>yarn.nodemanager.container-executor.class</name>
+      	 <value>org.apache.hadoop.yarn.server.nodemanager.LinuxContainerExecutor</value>
+    </property>
+	<!--此处的group为nodemanager用户所属组-->
+    <property>
+     	 <name>yarn.nodemanager.linux-container-executor.group</name>
+     	 <value>hadoop</value>
+    </property>
 </configuration>

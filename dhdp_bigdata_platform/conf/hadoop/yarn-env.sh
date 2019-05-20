@@ -1,4 +1,18 @@
-export YARN_PID_DIR=$HADOOP_YARN_HOME/pids
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 # User for YARN daemons
 export HADOOP_YARN_USER=${HADOOP_YARN_USER:-yarn}
 
@@ -38,17 +52,22 @@ fi
 # and/or YARN_RESOURCEMANAGER_OPTS.
 # If not specified, the default value will be picked from either YARN_HEAPMAX
 # or JAVA_HEAP_MAX with YARN_HEAPMAX as the preferred option of the two.
-#RESOURCEMANAGER内存
-export YARN_RESOURCEMANAGER_HEAPSIZE=512
-#NODEMANAGER内存
-export YARN_NODEMANAGER_HEAPSIZE=256
+#export YARN_RESOURCEMANAGER_HEAPSIZE=1000
+
+# Specify the max Heapsize for the timeline server using a numerical value
+# in the scale of MB. For example, to specify an jvm option of -Xmx1000m, set
+# the value to 1000.
+# This value will be overridden by an Xmx setting specified in either YARN_OPTS
+# and/or YARN_TIMELINESERVER_OPTS.
+# If not specified, the default value will be picked from either YARN_HEAPMAX
+# or JAVA_HEAP_MAX with YARN_HEAPMAX as the preferred option of the two.
+#export YARN_TIMELINESERVER_HEAPSIZE=1000
 
 # Specify the JVM options to be used when starting the ResourceManager.
 # These options will be appended to the options specified as YARN_OPTS
 # and therefore may override any similar flags set in YARN_OPTS
 #export YARN_RESOURCEMANAGER_OPTS=
 
-#export YARN_RESOURCEMANAGER_OPTS=" -server -Xmx2G -Xms2G -Xnoclassgc -XX:+DisableExplicitGC -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=$HADOOP_YARN_HOME/logs -XX:SurvivorRatio=8 -XX:+UseConcMarkSweepGC -XX:+UseParNewGC -XX:+CMSParallelRemarkEnabled -XX:+UseCMSCompactAtFullCollection -XX:CMSFullGCsBeforeCompaction=0 -XX:+CMSClassUnloadingEnabled -XX:LargePageSizeInBytes=128M -XX:+UseFastAccessorMethods -XX:+UseCMSInitiatingOccupancyOnly -XX:CMSInitiatingOccupancyFraction=70 -XX:SoftRefLRUPolicyMSPerMB=0 -XX:+PrintClassHistogram -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -XX:+PrintHeapAtGC  -XX:+PrintGCApplicationConcurrentTime -XX:+PrintGCApplicationStoppedTime -Xloggc:$HADOOP_YARN_HOME/logs/rm_gc.log $YARN_RESOURCEMANAGER_OPTS " 
 # Node Manager specific parameters
 
 # Specify the max Heapsize for the NodeManager using a numerical value
@@ -58,19 +77,17 @@ export YARN_NODEMANAGER_HEAPSIZE=256
 # and/or YARN_NODEMANAGER_OPTS.
 # If not specified, the default value will be picked from either YARN_HEAPMAX
 # or JAVA_HEAP_MAX with YARN_HEAPMAX as the preferred option of the two.
-
-
+#export YARN_NODEMANAGER_HEAPSIZE=1000
 
 # Specify the JVM options to be used when starting the NodeManager.
 # These options will be appended to the options specified as YARN_OPTS
 # and therefore may override any similar flags set in YARN_OPTS
 #export YARN_NODEMANAGER_OPTS=
 
-#export YARN_NODEMANAGER_OPTS=" -server -Xmx2G -Xms2G -Xnoclassgc -XX:+DisableExplicitGC -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=$HADOOP_YARN_HOME/logs -XX:SurvivorRatio=8 -XX:+UseConcMarkSweepGC -XX:+UseParNewGC -XX:+CMSParallelRemarkEnabled -XX:+UseCMSCompactAtFullCollection -XX:CMSFullGCsBeforeCompaction=0 -XX:+CMSClassUnloadingEnabled -XX:LargePageSizeInBytes=128M -XX:+UseFastAccessorMethods -XX:+UseCMSInitiatingOccupancyOnly -XX:CMSInitiatingOccupancyFraction=70 -XX:SoftRefLRUPolicyMSPerMB=0 -XX:+PrintClassHistogram -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -XX:+PrintHeapAtGC  -XX:+PrintGCApplicationConcurrentTime -XX:+PrintGCApplicationStoppedTime -Xloggc:$HADOOP_YARN_HOME/logs/nm_gc.log $YARN_NODEMANAGER_OPTS "
-
 # so that filenames w/ spaces are handled correctly in loops below
 IFS=
 
+export YARN_LOG_DIR=/home/hadoop/dhdp/logs/yarn
 
 # default log directory & file
 if [ "$YARN_LOG_DIR" = "" ]; then

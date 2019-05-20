@@ -33,19 +33,17 @@ function sync_time(){
 
 #挂载镜像
 function mount_os(){
+ mkdir -p /media/CentOS7
+ mount -o loop -t iso9660 /root/dhdp/CentOS-7-x86_64-DVD-1810.iso /media/CentOS7
+ ##在/etc/fstab文件里最后一行添加这行代码
 
-
-   mkdir -p /media/CentOS7
-   mount -o loop -t iso9660 /root/dhdp/CentOS-7-x86_64-DVD-1810.iso /media/CentOS7
-   ##在/etc/fstab文件里最后一行添加这行代码
-
-   echo "
-   /root/dhdp/CentOS-7-x86_64-DVD-1810.iso /media/CentOS7 iso9660 defaults,ro,loop 0 0
-   " >>  /etc/fstab
-   cd /etc/yum.repos.d/
-   mv CentOS-Media.repo CentOS-Media.repo_bak
-   touch CentOS-Media.repo
-   echo "
+ echo "
+ /root/dhdp/CentOS-7-x86_64-DVD-1810.iso /media/CentOS7 iso9660 defaults,ro,loop 0 0
+ " >>  /etc/fstab
+ cd /etc/yum.repos.d/
+ mv CentOS-Media.repo CentOS-Media.repo_bak
+ touch CentOS-Media.repo
+ echo "
 [centos7-media]
 
 name=centos7

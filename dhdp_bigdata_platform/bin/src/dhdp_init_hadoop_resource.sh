@@ -111,11 +111,11 @@ function handle_special_config(){
         /usr/bin/expect<<-EOF
         ssh $host_name
         expect {
-				*(yes/no)* {send -- yes\r;exp_continue;}
-				*password:* {send -- root\r;exp_continue;}
-				sed -i "s!broker.id=1!broker.id=$myid!g" $KAFKA_HOME/config/server.properties
-		        sed -i "s!host.name=hadoop01!host.name=$host_name!g" $KAFKA_HOME/config/server.properties
-		        sed -i "s!advertised.listeners=PLAINTEXT://hadoop01:9092!advertised.listeners=PLAINTEXT://$host_name:9092!g" $KAFKA_HOME/config/server.properties
+		    *(yes/no)* {send -- yes\r;exp_continue;}
+			*password:* {send -- root\r;exp_continue;}
+			sed -i "s!broker.id=1!broker.id=$myid!g" $KAFKA_HOME/config/server.properties
+		    sed -i "s!host.name=hadoop01!host.name=$host_name!g" $KAFKA_HOME/config/server.properties
+		    sed -i "s!advertised.listeners=PLAINTEXT://hadoop01:9092!advertised.listeners=PLAINTEXT://$host_name:9092!g" $KAFKA_HOME/config/server.properties
 		}
 
 		EOF
