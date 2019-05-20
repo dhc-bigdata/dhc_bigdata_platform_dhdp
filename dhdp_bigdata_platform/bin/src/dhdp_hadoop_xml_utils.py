@@ -107,5 +107,5 @@ class XmlUtils:
 
 if __name__ == '__main__':
         xmlutil = XmlUtils()
-        qresult = xmlutil.handle_method_by_params(sys.argv)
+        result = xmlutil.handle_method_by_params(sys.argv)
         result
