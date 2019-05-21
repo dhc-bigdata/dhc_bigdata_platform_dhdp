@@ -8,10 +8,11 @@ hostname5s=`python $dhdp_home/bin/src/dhdp_hadoop_xml_utils.py hostname`
 function ssh_user(){
 	ssh_key_gen
 	for hostname1 in $hostname1s;do
-	    ssh_copy_id $1 $hostname1
+	ssh_copy_id $1 $hostname1
 	done
 }
 function ssh_first(){
+	rm -rf ~/.ssh
 	for hostname2 in $hostname2s;do
 		/usr/bin/expect <<-EOF
 			spawn ssh -o stricthostkeychecking=no $1@$hostname2
@@ -30,6 +31,10 @@ function ssh_other(){
 		if [ "$hostname3" != "hadoop01" ];then
 			/usr/bin/expect <<-EOF
 				spawn ssh -o stricthostkeychecking=no $1@$hostname3
+				expect {
+			#		*(yes/no)* {send -- yes\r;exp_continue;}
+					*password:* {send -- $1\r;exp_continue;}
+			}
 				expect *]*  {send "ssh-keygen -t rsa\n"}
 				expect {
 						 */.ssh/id_rsa)* {send -- \r;exp_continue;}

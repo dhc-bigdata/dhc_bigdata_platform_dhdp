@@ -25,7 +25,10 @@ fi
 mode=$2
 echo mode: $mode
 
-mkdir -p /home/hadoop
+useradd hadoop
+usermod root -G hadoop
+usermod hadoop -G root
+chmod -R 750 /home/hadoop
 
 is_uncompressed=$3
 echo "is_uncompressed : $is_uncompressed"
@@ -34,6 +37,7 @@ if [[ $is_uncompressed != "-u" ]];then		#-u表示已解压过，不需要再进�
 	file_name_prefix_tar=dhdp-$1
 	echo "uncompress $file_name_prefix_tar.tar.gz ..."
 	cd /root/dhdp && rm -rf $file_name_prefix_tar && tar -zxf $file_name_prefix_tar.tar.gz
+	
 	if [ $? == 2 ];then
 		echo ""
 		echo "please check the dhdp version."
@@ -44,7 +48,7 @@ if [[ $is_uncompressed != "-u" ]];then		#-u表示已解压过，不需要再进�
 	echo "mv $file_name_prefix_tar to /home/hadoop/dhdp ..."
 	rm -rf /home/hadoop/dhdp && mv /root/dhdp/$file_name_prefix_tar /home/hadoop/dhdp
 	#处理bin、conf下所有文件中换行符格式
-	. /root/dhdp/$file_name_prefix_tar/bin/src/dhdp_utils.sh Doc2Unix /home/hadoop/bin/* /home/hadoop/conf/*
+	. /home/hadoop/dhdp/bin/src/dhdp_utils.sh Doc2Unix /home/hadoop/bin/* /home/hadoop/conf/*
 fi
 
 echo "execute dhdp_install_inner.sh ..."

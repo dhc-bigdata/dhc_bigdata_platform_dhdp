@@ -2,7 +2,7 @@
 #安装基础软件、以及工具  比如pssh、java、mysql
 
 dhdp_bin_dir=/home/hadoop/dhdp/bin/src/
-hostname=`hostname`
+hostname=`cat /etc/hostname`
 
 function install_tools(){
 	

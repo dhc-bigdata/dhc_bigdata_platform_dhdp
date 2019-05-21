@@ -1,6 +1,5 @@
 #!/bin/bash
 #初始化平台数据目录、日志目录 配置目录权限用户组
-
 dhdp_bin_dir=/home/hadoop/dhdp/bin #shell脚本存放目录
 dhdp_data_dir=/home/hadoop/dhdp/data #数据目录
 dhdp_conf_dir=/home/hadoop/dhdp/conf #最新的配置文件存放目录
@@ -39,7 +38,7 @@ function format_hadoop(){
 	#在格式化集群之前删除可能存在的过期数据目录
 	pssh -H "$IPs_str" -t 10000 -l hadoop -i "rm -rf $dhdp_data_dir/hadoop"
 
-		#进行格式化
+	#进行格式化
 	echo "[+] namenode format ..."
 	hadoop namenode -format
 	#将hadoop01上生成的元数据目录远程发送到hadoop02上
@@ -76,15 +75,9 @@ function init_hdfs_resource(){
 	echo "[+] init_hdfs_resource end ..."
 }
 
-
-#拷贝conf目录下配置文件到core/各组件中
-
+#拷贝conf目录下配置文件到最新配置文件到对应位置目录下
 function copy_resource_to_every_component(){
 	echo "[+] copy_resource_to_every_component start ..."
-	#配置hadoop用户下的.bashrc环境变量文件,\cp不提示直接删除
-	\cp -f $dhdp_conf_dir/ops/bashrc /home/hadoop/.bashrc
-	chown hadoop:hadoop /home/hadoop/.bashrc && source /home/hadoop/.bashrc
-	chmod 750 /home/hadoop
 	#复制conf目录下对应组件的最新配置文件到对应位置目录下
 	cp $dhdp_conf_dir/hadoop/* $dhdp_core_dir/hadoop/etc/hadoop
 	cp $dhdp_conf_dir/hbase/* $dhdp_core_dir/hbase/conf
@@ -92,7 +85,6 @@ function copy_resource_to_every_component(){
 	cp $dhdp_conf_dir/zookeeper/* $dhdp_core_dir/zookeeper/conf
 	cp $dhdp_conf_dir/spark/* $dhdp_core_dir/spark/conf
 	chown -R hadoop:hadoop $dhdp_core_dir
-	cp $dhdp_conf_dir/hadoop_compile/* $dhdp_core_dir/hadoop/bin
 
 	#处理集群中组件的特殊文件配置
 	handle_special_config
@@ -102,7 +94,6 @@ function copy_resource_to_every_component(){
 #处理集群中组件的特殊文件配置
 host_name="hadoop02,hadoop03"
 function handle_special_config(){
-    echo "$1"  >> /etc/hostname
     myid = 1
     for hostname in ${host_name[@]};
     do
@@ -111,8 +102,6 @@ function handle_special_config(){
         /usr/bin/expect<<-EOF
         ssh $host_name
         expect {
-		    *(yes/no)* {send -- yes\r;exp_continue;}
-			*password:* {send -- root\r;exp_continue;}
 			sed -i "s!broker.id=1!broker.id=$myid!g" $KAFKA_HOME/config/server.properties
 		    sed -i "s!host.name=hadoop01!host.name=$host_name!g" $KAFKA_HOME/config/server.properties
 		    sed -i "s!advertised.listeners=PLAINTEXT://hadoop01:9092!advertised.listeners=PLAINTEXT://$host_name:9092!g" $KAFKA_HOME/config/server.properties

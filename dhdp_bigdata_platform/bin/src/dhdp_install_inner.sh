@@ -83,6 +83,9 @@ if [ $ret != 0 ];then
 	exit $ret
 fi
 
+#初始化第一台主机hadoop密码
+. $dhdp_home/bin/src/dhdp_each_host_config_user.sh && config_user
+
 #删除垃圾文件
 #delete_first_hosts=`python $dhdp_home/bin/src/dhdp_xml_delete_hostname.py`
 #for host in $delete_first_hosts;do
@@ -121,21 +124,21 @@ function share_dhdp(){
 	#读取除过第一台主机的其他主机名
 	delete_first_hosts=`python $dhdp_home/bin/src/dhdp_xml_delete_hostname.py`
 	for host in $delete_first_hosts;do
-		echo "------>Synchronize dhdp to $hosts start<------"
+		echo "------>Synchronize dhdp to $host start<------"
 		bash $dhdp_home/bin/dhdp_pssh.sh -H $host "mkdir /home/hadoop"
 		sleep 5
 		echo pscp -r -H $host $dhdp_home /home/hadoop
 		pscp -r -e /var/log/pssh/pscp -H $host $dhdp_home /home/hadoop/
 		
 		sleep 5
-		echo "------>Synchronize dhdp to $hosts end<------"
+		echo "------>Synchronize dhdp to $host end<------"
 
-		echo "------>Synchronize iso to $hosts start<------"
+		echo "------>Synchronize iso to $host start<------"
 		#bash $dhdp_home/bin/dhdp_pssh.sh -H $host "rm -rf /root/dhdp"
 		bash $dhdp_home/bin/dhdp_pssh.sh -H $host "mkdir /root/dhdp"
 		bash $dhdp_home/bin/dhdp_pscp.sh -H $host /root/dhdp/CentOS-7-x86_64-DVD-1810.iso /root/dhdp/
 		sleep 5
-		echo "------>Synchronize iso to $hosts end<------"
+		echo "------>Synchronize iso to $host end<------"
 	done
 
 }
@@ -143,14 +146,24 @@ function share_dhdp(){
 share_dhdp
 
 #配置用户组
-bash $dhdp_home/bin/dhdp_pssh.sh -h ". $dhdp_home/bin/src/dhdp_each_host_config_user.sh"
+delete_first_hosts=`python $dhdp_home/bin/src/dhdp_xml_delete_hostname.py`
+for host in $delete_first_hosts;do
+	echo "------>config user to $host start<------"
+	bash $dhdp_home/bin/dhdp_pssh.sh -H $host "useradd hadoop"
+	ssh $host 'yum install -y expect'
+	bash $dhdp_home/bin/dhdp_pssh.sh -H $host ". $dhdp_home/bin/src/dhdp_each_host_config_user.sh && config_user"
+	bash $dhdp_home/bin/dhdp_pssh.sh -H $host "usermod root -G hadoop"
+	bash $dhdp_home/bin/dhdp_pssh.sh -H $host "usermod hadoop -G root"
+	bash $dhdp_home/bin/dhdp_pssh.sh -H $host "chmod -R 750 /home/hadoop"
+	#ssh $host '\cp /etc/skel/.* /home/hadoop/'
+	echo "------>config user to $host end<------"
+done
+
 
 #配置hadoop用户的免密
 su - hadoop <<-EOF
 	bash $dhdp_home/bin/src/dhdp_each_host_ssh_user.sh hadoop
 EOF
-
-bash $dhdp_home/bin/dhdp_pssh.sh -h "chown -R hadoop:hadoop /home/hadoop/dhdp"
 
 #初始化集群本地资源
 bash $dhdp_home/bin/dhdp_pssh.sh -h "bash $dhdp_home/bin/src/dhdp_init_local_rescource.sh"
@@ -171,25 +184,37 @@ done
 
 #安装除第一台主机外其他主机
 function except_first_host_install_tools(){
+	echo "------>except_first_host_install_tools start<------"	
 	#读取除过第一台主机的其他主机名
 	delete_first_hosts=`python $dhdp_home/bin/src/dhdp_xml_delete_hostname.py`
 	for host in $delete_first_hosts;do
-		echo "------>except_first_host_install_tools start<------"	
-		bash $dhdp_home/bin/dhdp_pssh.sh -H $host ". $dhdp_home/bin/src/dhdp_utils.sh && mount_os"
-		bash $dhdp_home/bin/dhdp_pssh.sh -H $host ". $dhdp_home/bin/src/dhdp_each_host_install_tools.sh && install_tools"
-		bash $dhdp_home/bin/dhdp_pssh.sh -H $host ". $dhdp_home/bin/src/dhdp_each_host_install_tools.sh && install_database"
-		echo "------>except_first_host_install_tools end<------"
+		
+		ssh $host '. $dhdp_home/bin/src/dhdp_utils.sh && mount_os'
+		ssh $host '. $dhdp_home/bin/src/dhdp_each_host_install_tools.sh && install_tools'
+		ssh $host 'bash $dhdp_home/bin/src/dhdp_install_mysql.sh install 5.7.22'
 	done
+	echo "------>except_first_host_install_tools end<------"
 }
 
 except_first_host_install_tools
 #初始化集群
+
 function init_Cluster(){
 	echo "------->init_Cluster  start<-------"
-	hostname=`hostname`
+	bash $dhdp_home/bin/dhdp_pssh.sh -h "bash $dhdp_home/bin/src/dhdp_init_local_rescource.sh"
+	bash $dhdp_home/bin/dhdp_pssh.sh -h "chown -R hadoop:hadoop /home/hadoop"
+	
+	hostname=`cat /etc/hostname`
 	if [ $hostname == "hadoop01" ];then
-		bash $dhdp_home/bin/src/dhdp_each_host_init.sh
+		su - hadoop <<-EOF
+		bash $dhdp_home/bin/src/dhdp_init_hadoop_resource.sh format
+		bash $dhdp_home/bin/src/dhdp_init_hadoop_resource.sh copy_resource
+		bash $dhdp_home/bin/src/dhdp_init_hadoop_resource.sh init_hdfs
+		bash $dhdp_home/bin/src/dhdp_init_hadoop_resource.sh special_config
+		EOF
 	fi
+	
+	
 	echo "------->init_Cluster  stop<-------"
 }
 init_Cluster

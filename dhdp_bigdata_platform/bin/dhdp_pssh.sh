@@ -12,7 +12,7 @@ if [[ $arg == "-H" ]];then
 	echo "pssh -H : $v_order"
 	pssh -e $log_dir $arg $host_str $v_order
 else 
-	echo "pscp -h : $host_str"
+	echo "pssh -h : $host_str"
 	pssh -e $log_dir $arg /home/hadoop/dhdp/conf/conf_ops/hosts $host_str	
 	
 fi
