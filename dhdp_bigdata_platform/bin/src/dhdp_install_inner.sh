@@ -15,6 +15,7 @@ if [ "x$1" != "xinstall" ];then
 	usage
 	exit 1
 fi
+
 #开始时间
 starttime=`date +'%Y-%m-%d %H:%M:%S'`
 start_seconds=$(date --date="$starttime" +%s);
@@ -83,10 +84,10 @@ if [ $ret != 0 ];then
 fi
 
 #删除垃圾文件
-delete_first_hosts=`python $dhdp_home/bin/src/dhdp_xml_delete_hostname.py`
-for host in $delete_first_hosts;do
-	bash $dhdp_home/bin/dhdp_pssh.sh -H $host "rm -rf /home/hadoop"
-done
+#delete_first_hosts=`python $dhdp_home/bin/src/dhdp_xml_delete_hostname.py`
+#for host in $delete_first_hosts;do
+#	bash $dhdp_home/bin/dhdp_pssh.sh -H $host "rm -rf /home/hadoop"
+#done
 
 #配置防火墙以及关闭seLinux
 for host in $hosts;do
@@ -120,21 +121,21 @@ function share_dhdp(){
 	#读取除过第一台主机的其他主机名
 	delete_first_hosts=`python $dhdp_home/bin/src/dhdp_xml_delete_hostname.py`
 	for host in $delete_first_hosts;do
-		echo "------>Synchronize dhdp start<------"
+		echo "------>Synchronize dhdp to $hosts start<------"
 		bash $dhdp_home/bin/dhdp_pssh.sh -H $host "mkdir /home/hadoop"
 		sleep 5
 		echo pscp -r -H $host $dhdp_home /home/hadoop
 		pscp -r -e /var/log/pssh/pscp -H $host $dhdp_home /home/hadoop/
 		
 		sleep 5
-		echo "------>Synchronize dhdp start<------"
+		echo "------>Synchronize dhdp to $hosts end<------"
 
-		echo "------>Synchronize iso start<------"
-		bash $dhdp_home/bin/dhdp_pssh.sh -H $host "rm -rf /root/dhdp"
+		echo "------>Synchronize iso to $hosts start<------"
+		#bash $dhdp_home/bin/dhdp_pssh.sh -H $host "rm -rf /root/dhdp"
 		bash $dhdp_home/bin/dhdp_pssh.sh -H $host "mkdir /root/dhdp"
 		bash $dhdp_home/bin/dhdp_pscp.sh -H $host /root/dhdp/CentOS-7-x86_64-DVD-1810.iso /root/dhdp/
 		sleep 5
-		echo "------>Synchronize iso start<------"
+		echo "------>Synchronize iso to $hosts end<------"
 	done
 
 }
