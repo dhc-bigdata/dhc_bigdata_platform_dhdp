@@ -15,6 +15,7 @@ function config_user(){
 	/usr/bin/expect <<-EOF
 	set timeout 120
 	spawn passwd $user
+	expect "*ssh/id_rsa):" {send "$user\n"}
 	expect "New password:" {send "$user\n"}
 	expect "Retype new password:" {send "$user\n"}
 	expect eof
@@ -28,7 +29,6 @@ function config_user_group(){
 	#将hadoop用户添加至root组
 	usermod hadoop -G root
 
-	cp $dhdp_home/conf/bashrc /home/hadoop/.bashrc
 	chown -R $user:$user /home/$user
 	chmod -R 750 /home/$user
 

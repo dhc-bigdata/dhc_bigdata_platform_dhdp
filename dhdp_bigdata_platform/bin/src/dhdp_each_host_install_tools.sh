@@ -9,10 +9,9 @@ function install_tools(){
 	#安装基础软件
 	yum install -y ncurses-devel gcc*  openssh-clients openssh-server
 	yum install -y zlib-devel autoconf* automake libtool* cmake openssl-devel fuse-devel
-	yum install -y unzip zip vim* dos2unix expect telnet*
+	yum install -y unzip zip vim* expect telnet*
 	yum install -y net-tools firewalld* systemd*
 	yum install -y lzo-devel snappy-devel ntp ntpdate
-	check dependence_library
 
 	#安装pssh
 	bash $dhdp_bin_dir/dhdp_install_pssh.sh

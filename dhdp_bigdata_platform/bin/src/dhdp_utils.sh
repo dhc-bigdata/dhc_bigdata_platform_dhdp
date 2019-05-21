@@ -1,4 +1,14 @@
 #! /bin/bash
+
+#定义脚本变量
+dhdp_home=/home/hadoop/dhdp
+#获取集群主机名
+hosts=`python $dhdp_home/bin/src/dhdp_hadoop_xml_utils.py hostname`
+ips=`python $dhdp_home/bin/src/dhdp_hadoop_xml_utils.py IPs`
+iphosts=`python $dhdp_home/bin/src/dhdp_read_ip_hostname.py`
+hostname=hadoop0
+hpid=0
+
 #文本及脚本文件格式如windows转Unix参考命令dos2unix
 #-e 转义反斜扛字符 -n 禁止换行 \b 删除前一个字符 \n 换行且光标移至行首
 IFS=$(echo -en "\n\b")
@@ -17,24 +27,23 @@ function sync_time(){
     OPTIONS='-u ntp:ntp -p /var/run/ntpd.pid -g'"  >  /etc/sysconfig/ntpd
     systemctl disable ntpd.service
     systemctl enable ntpd.service
+	echo " "
     echo "sync_time end......"
 }
 
 #挂载镜像
 function mount_os(){
+ mkdir -p /media/CentOS7
+ mount -o loop -t iso9660 /root/dhdp/CentOS-7-x86_64-DVD-1810.iso /media/CentOS7
+ ##在/etc/fstab文件里最后一行添加这行代码
 
-
-   mkdir -p /media/CentOS7
-   mount -o loop -t iso9660 /root/dhdp/CentOS-7-x86_64-DVD-1810.iso /media/CentOS7
-   ##在/etc/fstab文件里最后一行添加这行代码
-
-   echo "
-   /root/dhdp/CentOS-7-x86_64-DVD-1810.iso /media/CentOS7 iso9660 defaults,ro,loop 0 0
-   " >>  /etc/fstab
-   cd /etc/yum.repos.d/
-   mv CentOS-Media.repo CentOS-Media.repo_bak
-   touch CentOS-Media.repo
-   echo "
+ echo "
+ /root/dhdp/CentOS-7-x86_64-DVD-1810.iso /media/CentOS7 iso9660 defaults,ro,loop 0 0
+ " >>  /etc/fstab
+ cd /etc/yum.repos.d/
+ mv CentOS-Media.repo CentOS-Media.repo_bak
+ touch CentOS-Media.repo
+ echo "
 [centos7-media]
 
 name=centos7
@@ -54,54 +63,39 @@ gpgkey=file:///media/CentOS7/RPM-GPG-KEY-CentOS-7
 
 }
 
+
+function init_hosts(){
+    echo "$iphosts" >> /etc/hosts
+
+    for ip in $ips;do
+        /usr/bin/expect <<-EOF
+        set timeout 300
+        spawn scp /etc/hosts root@$ip:/etc
+        expect {
+				*(yes/no)* {send -- yes\r;exp_continue;}
+				*password:* {send -- root\r;exp_continue;}
+        }
+		EOF
+    done
+}
+
 function init_hostname(){
-	ips=`获取ips脚本`
-	/usr/bin/expect <<EOF
-		set timeout 120
-		
-		for ip in $ips;do
+	rm -rf /root/.ssh
+        for ip in $ips;do
+			((hpid++))
+			/usr/bin/expect <<-EOF
+			set timeout 300
 			spawn ssh -o stricthostkeychecking=no root@$ip
 			expect {
 					"(yes/no)" {send "yes\r"; exp_continue}
-					"password:" {send "${root_password}\n; exp_continue"}
+					"password:" {send "root\n; exp_continue"}
 			}
-			expect "]#"  {send "echo $ip > /etc/hosts \n"}
+			expect "]#"  {send "rm -rf /root/.ssh \n"}
+			expect "]#"  {send "echo '$hostname$hpid'  > /etc/hostname \n"}
 			expect "]#"  {send "exit\n"}
 			#expect eof
-		done
-EOF
-
-}
-
-function ssh_key_gen(){
-		rm -rf /root/.ssh
-		/usr/bin/expect <<-EOF
-		set timeout 300
-		spawn ssh-keygen -t rsa
-		expect {
-				*(/root/.ssh/id_rsa)* {send -- \r;exp_continue;}
-				*passphrase)*	{send -- \r;exp_continue;}
-				*again*	 {send -- \r;exp_continue;}
-		}
-		EOF
-		
-}
-
-function ssh_copy_id(){
-		/usr/bin/expect <<-EOF
-		set timeout 300
-			spawn ssh-copy-id $1
-		expect {
-				*(yes/no)* {send -- yes\r;exp_continue;}
-				*password:* {send -- root\r;exp_continue;}
-		}
-		EOF
-}
-function ssh_copy_id_all(){
-		SERVERS=`获取主机名`
-		for SERVER in $SERVERS
-		do
-			ssh_copy_id $SERVER
+			EOF
 		done
 }
+
 

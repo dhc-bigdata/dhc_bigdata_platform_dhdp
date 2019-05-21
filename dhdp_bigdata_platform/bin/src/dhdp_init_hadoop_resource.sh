@@ -111,26 +111,16 @@ function handle_special_config(){
         /usr/bin/expect<<-EOF
         ssh $host_name
         expect {
-				*(yes/no)* {send -- yes\r;exp_continue;}
-				*password:* {send -- root\r;exp_continue;}
-				send -i "s!broker.id=1!broker.id=$myid!g" $KAFKA_HOME/config/server.properties
-		        send -i "s!host.name=hadoop01!host.name=$host_name!g" $KAFKA_HOME/config/server.properties
-		        send -i "s!advertised.listeners=PLAINTEXT://hadoop01:9092!advertised.listeners=PLAINTEXT://$host_name:9092!g" $KAFKA_HOME/config/server.properties
+		    *(yes/no)* {send -- yes\r;exp_continue;}
+			*password:* {send -- root\r;exp_continue;}
+			sed -i "s!broker.id=1!broker.id=$myid!g" $KAFKA_HOME/config/server.properties
+		    sed -i "s!host.name=hadoop01!host.name=$host_name!g" $KAFKA_HOME/config/server.properties
+		    sed -i "s!advertised.listeners=PLAINTEXT://hadoop01:9092!advertised.listeners=PLAINTEXT://$host_name:9092!g" $KAFKA_HOME/config/server.properties
 		}
 
 		EOF
     done
-
-    if [ "x$HOSTNAME" == "xhadoop03" ];then
-		#第三个节点hadoop03安装了mysql,就不安装hive啦
-		rm -rf $dhdp_core_dir/hive
-		rm -rf $dhdp_log_dir/hive
-	fi
-
-	#删除除第三个节点hadoop03外的mysql安装包
-	if [ "x$HOSTNAME" != "xhadoop03" ];then
-		rm -rf $dhdp_package_dir/mysql-*.tar.gz
-	fi
+	
 }
 function main(){
 	if [ "x$1" == "xformat" ];then

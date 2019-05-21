@@ -2,7 +2,11 @@
 dhdp_dir=/home/hadoop/dhdp/bin/
 
 echo 'execute dhdp_install_one_key_launch.sh begin ...'
-
+function usage(){
+	echo '[-] Usage: dhdp_install_lanuch.sh [version] [mode] [-u]'
+	echo 'mode should be in (install)'
+	echo '-u means that the pressure has been decompressed and no further decompression is needed to save time '
+}
 if [ "x$USER" != "xroot" ];then
 	echo "[-] Install using the root user."
 	exit 1
@@ -39,9 +43,11 @@ if [[ $is_uncompressed != "-u" ]];then		#-u表示已解压过，不需要再进�
 	#用新文件夹替换原文件夹
 	echo "mv $file_name_prefix_tar to /home/hadoop/dhdp ..."
 	rm -rf /home/hadoop/dhdp && mv /root/dhdp/$file_name_prefix_tar /home/hadoop/dhdp
+	#处理bin、conf下所有文件中换行符格式
+	. /root/dhdp/$file_name_prefix_tar/bin/src/dhdp_utils.sh Doc2Unix /home/hadoop/bin/* /home/hadoop/conf/*
 fi
 
-echo "execute dhdp_install_one_key_inner.sh ..."
+echo "execute dhdp_install_inner.sh ..."
 cd /home/hadoop/dhdp/bin/src && bash dhdp_install_inner.sh $mode
 
 echo 'execute dhdp_install_one_key_launch.sh end ...'

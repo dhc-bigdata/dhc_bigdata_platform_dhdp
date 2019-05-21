@@ -11,7 +11,7 @@ class XmlUtils:
 		root = docxml.documentElement  # 获取元素的根节点
 		hosts = root.getElementsByTagName('host')  #获取子节点数组
 		return hosts
-	#读取集群中的所有IP地址
+	#读取集中的所有IP地址
 	def get_cluster_IPs(self, hosts):
 		IPList = []
 		#对所有的子节点进行遍历
@@ -19,70 +19,71 @@ class XmlUtils:
 			# 根据标签名输出第一个元素
 			IP = host.getElementsByTagName("IP")[0]
 			# 输出标签名的子节点的第一个值，并转为data类型
-			IPList.append(IP.childNodes[0].data)
-		for i in IPList:
-			print(i)
+			IPList = IP.childNodes[0].data
+			print IPList
 
-	#读取集群的所有hostname
+	#读取集的所有hostname
 	def get_cluster_hostname(self, hosts):
-		hostNameList = []
 		for host in hosts:
 			hostname = host.getElementsByTagName("hostname")[0]
-			
-			hostNameList.append(hostname.childNodes[0].data)
-			
-		#for i in hostNameList:
-		#	print(i)
-		return hostNameList
-	#读取集群的各节点的root密码
+			hostNameList =hostname.childNodes[0].data
+			print hostNameList
+	
+	#读取集的各节点的root密码
 	def get_cluster_root_passwd(self, hosts):
 		rootPasswd = ''
 		host = hosts[0]
 		password_root = host.getElementsByTagName("password_root")[0]
 		rootPasswd = password_root.childNodes[0].data
-		return rootPasswd
-	# 读取集群的各节点的hadoop密码
+		print rootPasswd
+	# 读取群的各节点的hadoop密码
 	def get_cluster_hadoop_passwd(self, hosts):
 		hadoopPasswd = ''
 		host = hosts[0]
 		password_hadoop = host.getElementsByTagName("password_hadoop")[0]
 		hadoopPasswd = password_hadoop.childNodes[0].data
-		return hadoopPasswd
-	#读取集群的各节点的memory大小
+		print hadoopPasswd
+	#读取集的各节点的memory大小
 	def get_cluster_memory_size(self, hosts):
-		memoryList = []
 		for host in hosts:
 			memory = host.getElementsByTagName("memory")[0]
-			memoryList.append(memory.childNodes[0].data)
-		for i in memoryList:
-			print(i)
-	#读取集群的各节点的processes列表
+			memoryList = memory.childNodes[0].data
+			print memoryList
+	#读取集的各节点的processes列表
 	def get_cluster_processes(self, hosts):
-		processesList = []
 		for host in hosts:
 			process = host.getElementsByTagName("processes")[0]
-			processesList.append(process.childNodes[0].data)
-		for i in processesList:
-			print(i)
-	#根据参数调用对应的方法
+			processesList = process.childNodes[0].data
+			print processesList
+	
+	#根据参确定调用对应的方法处理
 	def get_hostname_by_IP(self, hosts, IP):
 		hostname =''
 		for host in hosts:
 			IPTag = host.getElementsByTagName("IP")[0]
 			IPData = IPTag.childNodes[0].data
-
 			if IPData == sys.argv[1]:
 				hostNameTag = host.getElementsByTagName("hostname")[0]
 				hostname = hostNameTag.childNodes[0].data
-
-		return hostname
-	#根据参数调用对应的方法
-	def method_by_params(self, argv):
-		result = ''
+		print hostname
+	#根据参调用对应的方法
+	def get_hostnamelist_by_process(self, hosts, process):
+		processesList = []
+		for host in hosts:
+			process = host.getElementsByTagName("processes")[0]
+			processesList = process.childNodes[0].data
+			if sys.argv[1] in processesList:
+				hostname = host.getElementsByTagName("hostname")[0]
+				hostNameList = hostname.childNodes[0].data
+				print hostNameList
+	
+	#根据参确定调用对应的方法处理
+	def handle_method_by_params(self, argv):
 		method_name = argv[1]
-		function_params = argv	#定义方法参数
+		function_params = argv  #定义方法参数
 		del function_params[0]
 		hosts = self.read_xml_hosts()
+		result = ''
 		if method_name == "IPs":
 			result = self.get_cluster_IPs(hosts)
 		elif method_name == "hostname":
@@ -97,6 +98,8 @@ class XmlUtils:
 			result = self.get_cluster_processes(hosts)
 		elif method_name == "get_hostname_by_IP":
 			result = self.get_hostname_by_IP(hosts, function_params[0])
+		elif method_name == "get_hostnamelist_by_process":
+			result = self.get_hostnamelist_by_process(hosts, function_params[0])
 		else:
 			print("[-] can not found function name match : " + method_name)
 			sys.exit(-1)  #所有程序（方法，类等）停止，系统停止运行； sys.exit(0)正常退出
@@ -104,5 +107,5 @@ class XmlUtils:
 
 if __name__ == '__main__':
 	xmlutil = XmlUtils()
-	result = xmlutil.method_by_params(sys.argv)
-	print(result)
+	result = xmlutil.handle_method_by_params(sys.argv)
+	result
