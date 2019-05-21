@@ -33,32 +33,44 @@ function sync_time(){
 
 #挂载镜像
 function mount_os(){
- mkdir -p /media/CentOS7
- mount -o loop -t iso9660 /root/dhdp/CentOS-7-x86_64-DVD-1810.iso /media/CentOS7
- ##在/etc/fstab文件里最后一行添加这行代码
+    mkdir -p /media/CentOS7
+    mount -o loop -t iso9660 /root/dhdp/CentOS-7-x86_64-DVD-1810.iso /media/CentOS7
+    ##在/etc/fstab文件里最后一行添加这行代码
 
- echo "
- /root/dhdp/CentOS-7-x86_64-DVD-1810.iso /media/CentOS7 iso9660 defaults,ro,loop 0 0
- " >>  /etc/fstab
- cd /etc/yum.repos.d/
- mv CentOS-Media.repo CentOS-Media.repo_bak
- touch CentOS-Media.repo
- echo "
-[centos7-media]
+    echo "
+    /root/dhdp/CentOS-7-x86_64-DVD-1810.iso /media/CentOS7 iso9660 defaults,ro,loop 0 0
+    " >>  /etc/fstab
+    cd /etc/yum.repos.d/
+    if [ ! -f "$CentOS-Media.repo_bak" ]; then
+        mv CentOS-Media.repo CentOS-Media.repo_bak
+    else
+        rm -rf CentOS-Media.repo_bak
+        mv CentOS-Media.repo CentOS-Media.repo_bak
+    fi
 
-name=centos7
+    if [ ! -f "$CentOS-Media.repo" ]; then
+        touch CentOS-Media.repo
+    else
+        rm -rf CentOS-Media.repo
+        touch CentOS-Media.repo
+    fi
 
-baseurl=file:///media/CentOS7
+    echo "
+centos7-media]
 
-enabled=1
+ame=centos7
 
-gpgcheck=0
+aseurl=file:///media/CentOS7
 
-gpgkey=file:///media/CentOS7/RPM-GPG-KEY-CentOS-7
-" >> CentOS-Media.repo
-   mv CentOS-Base.repo CentOS-Base.repo.bak
+nabled=1
 
-   yum makecache
+pgcheck=0
+
+pgkey=file:///media/CentOS7/RPM-GPG-KEY-CentOS-7
+ >> CentOS-Media.repo
+    mv CentOS-Base.repo CentOS-Base.repo.bak
+
+    yum makecache
 
 
 }
