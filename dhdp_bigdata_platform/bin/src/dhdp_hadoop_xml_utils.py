@@ -13,7 +13,6 @@ class XmlUtils:
 		return hosts
 	#读取集中的所有IP地址
 	def get_cluster_IPs(self, hosts):
-		IPList = []
 		#对所有的子节点进行遍历
 		for host in hosts:
 			# 根据标签名输出第一个元素

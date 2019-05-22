@@ -56,17 +56,17 @@ function mount_os(){
     fi
 
     echo "
-centos7-media]
+[centos7-media]
 
-ame=centos7
+name=centos7
 
-aseurl=file:///media/CentOS7
+baseurl=file:///media/CentOS7
 
-nabled=1
+enabled=1
 
-pgcheck=0
+gpgcheck=0
 
-pgkey=file:///media/CentOS7/RPM-GPG-KEY-CentOS-7
+gpgkey=file:///media/CentOS7/RPM-GPG-KEY-CentOS-7"
  >> CentOS-Media.repo
     mv CentOS-Base.repo CentOS-Base.repo.bak
 
